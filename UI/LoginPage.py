@@ -2,19 +2,16 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 
-import sys
-
 class Login_Page(QWidget):
     switch_window_to_main = QtCore.pyqtSignal()
     ID = '0'
     Password = '0'
 
     def setupUi(self, LoginForm):
-        LoginForm.setObjectName("Form")
+        LoginForm.setObjectName("LoginForm")
         LoginForm.resize(1280, 720)
         self.Background = QtWidgets.QLabel(LoginForm)
         self.Background.setGeometry(QtCore.QRect(0, 0, 1280, 800))
-        self.Background.setText("")
         self.Background.setPixmap(QtGui.QPixmap("UI/imgsource/white-background.png"))
         self.Background.setScaledContents(True)
         self.Background.setObjectName("Background")
@@ -57,7 +54,6 @@ class Login_Page(QWidget):
         # Login Logo Label
         self.LoginLogo = QtWidgets.QLabel(LoginForm)
         self.LoginLogo.setGeometry(QtCore.QRect(410, 380, 41, 41))
-        self.LoginLogo.setText("")
         self.LoginLogo.setPixmap(QtGui.QPixmap("UI/imgsource/login-id.png"))
         self.LoginLogo.setScaledContents(True)
         self.LoginLogo.setObjectName("LoginLogo")
@@ -76,7 +72,6 @@ class Login_Page(QWidget):
         #Password Logo Label
         self.PasswordLogo = QtWidgets.QLabel(LoginForm)
         self.PasswordLogo.setGeometry(QtCore.QRect(410, 450, 41, 41))
-        self.PasswordLogo.setText("")
         self.PasswordLogo.setPixmap(QtGui.QPixmap("UI/imgsource/login-password.png"))
         self.PasswordLogo.setScaledContents(True)
         self.PasswordLogo.setObjectName("PasswordLogo")
@@ -87,7 +82,6 @@ class Login_Page(QWidget):
         self.LoginSeparator.setStyleSheet("background-color:rgba(0,0,0,0)\n"
                                           "border-none;\n"
                                           "border-left:2px solid rgba(105,118,132,255);")
-        self.LoginSeparator.setText("")
         self.LoginSeparator.setPixmap(QtGui.QPixmap("UI/imgsource/black-background.jpg"))
         self.LoginSeparator.setObjectName("LoginSeparator")
 
@@ -97,7 +91,6 @@ class Login_Page(QWidget):
         self.PasswordSeparator.setStyleSheet("background-color:rgba(0,0,0,0)\n"
                                    "border-none;\n"
                                    "border-left:2px solid rgba(105,118,132,255);")
-        self.PasswordSeparator.setText("")
         self.PasswordSeparator.setPixmap(QtGui.QPixmap("UI/imgsource/black-background.jpg"))
         self.PasswordSeparator.setObjectName("PasswordSeparator")
 
@@ -130,18 +123,19 @@ class Login_Page(QWidget):
         self.retranslateUi(LoginForm)
         QtCore.QMetaObject.connectSlotsByName(LoginForm)
 
-    def retranslateUi(self, Form):
+    def retranslateUi(self, LoginForm):
         _translate = QtCore.QCoreApplication.translate
-        Form.setWindowTitle(_translate("Form", "Form"))
-        self.LoginButton.setText(_translate("Form", "L O G I N"))
-        self.LoginLabel.setText(_translate("Form", "TextLabel"))
-        self.PasswordLabel.setText(_translate("Form", "TextLabel"))
-        self.lineEdit_ID.setPlaceholderText(_translate("Form", "Username"))
-        self.lineEdit_Password.setPlaceholderText(_translate("Form", "Password"))
+        LoginForm.setWindowTitle(_translate("LoginForm", "LightManager"))
+        LoginForm.setWindowIcon(QIcon("UI/imgsource/lightbulb.png"))
+        self.LoginButton.setText(_translate("LoginForm", "L O G I N"))
+        self.LoginLabel.setText(_translate("LoginForm", "TextLabel"))
+        self.PasswordLabel.setText(_translate("LoginForm", "TextLabel"))
+        self.lineEdit_ID.setPlaceholderText(_translate("LoginForm", "Username"))
+        self.lineEdit_Password.setPlaceholderText(_translate("LoginForm", "Password"))
 
 
     # 여기에 id,pw 오류처리 및 확인과정 들어가야됨
     def switch_login_page(self):
-        self.ID = self.lineEdit_SID.text()
-        self.Password = self.lineEdit_Name.text()
+        self.ID = self.lineEdit_ID.text()
+        self.Password = self.lineEdit_Password.text()
         self.switch_window_to_main.emit()
