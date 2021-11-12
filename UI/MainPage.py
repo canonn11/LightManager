@@ -83,27 +83,81 @@ class Main_Page(QWidget):
         # Left side Pushbutton #1 -> Overview Button
         self.MainButton = QtWidgets.QPushButton(MainForm)
         self.MainButton.setGeometry(QtCore.QRect(6, 10, 51, 51))
+        self.MainButton.setStyleSheet("QPushButton{\n"
+                                       "background-color: rgba(255, 255, 255, 0);\n"
+                                       "border-image:url(UI/imgsource/clipboard1.png);\n"
+                                       "}\n"
+                                       "QPushButton:hover{\n"
+                                       "background-color: rgba(255, 255, 255, 0);\n"
+                                       "border-image:url(UI/imgsource/clipboard2.png);\n"
+                                       "}")
         self.MainButton.setObjectName("MainButton")
 
-        # Left side Pushbutton #2 -> LightManagement Button
+        # Left side Pushbutton #2 -> LightControl Button
+        self.LightControlButton = QtWidgets.QPushButton(MainForm)
+        self.LightControlButton.setGeometry(QtCore.QRect(6, 80, 51, 51))
+        self.LightControlButton.setStyleSheet("QPushButton{\n"
+                                      "background-color: rgba(255, 255, 255, 0);\n"
+                                      "border-image:url(UI/imgsource/bulb1.png);\n"
+                                      "}\n"
+                                      "QPushButton:hover{\n"
+                                      "background-color: rgba(255, 255, 255, 0);\n"
+                                      "border-image:url(UI/imgsource/bulb2.png);\n"
+                                      "}")
+        self.LightControlButton.setObjectName("LightControlButton")
+
+        # Left side Pushbutton #3 -> LightManagement Button
         self.LightButton = QtWidgets.QPushButton(MainForm)
-        self.LightButton.setGeometry(QtCore.QRect(6, 70, 51, 51))
+        self.LightButton.setGeometry(QtCore.QRect(6, 150, 51, 51))
+        self.LightButton.setStyleSheet("QPushButton{\n"
+                                      "background-color: rgba(255, 255, 255, 0);\n"
+                                      "border-image:url(UI/imgsource/folder1.png);\n"
+                                      "}\n"
+                                      "QPushButton:hover{\n"
+                                      "background-color: rgba(255, 255, 255, 0);\n"
+                                      "border-image:url(UI/imgsource/folder2.png);\n"
+                                      "}")
         self.LightButton.setObjectName("LightButton")
 
-        # Left side Pushbutton #3 -> LightControl Button
-        self.LightControlButton = QtWidgets.QPushButton(MainForm)
-        self.LightControlButton.setGeometry(QtCore.QRect(6, 130, 51, 51))
-        self.LightControlButton.setObjectName("pushButton_3")
 
         # Left side Pushbutton #4 -> Account Control Button
         self.AccountButton = QtWidgets.QPushButton(MainForm)
-        self.AccountButton.setGeometry(QtCore.QRect(6, 190, 51, 51))
-        self.AccountButton.setObjectName("pushButton")
+        self.AccountButton.setGeometry(QtCore.QRect(6, 220, 51, 51))
+        self.AccountButton.setStyleSheet("QPushButton{\n"
+                                      "background-color: rgba(255, 255, 255, 0);\n"
+                                      "border-image:url(UI/imgsource/setting1.png);\n"
+                                      "}\n"
+                                      "QPushButton:hover{\n"
+                                      "background-color: rgba(255, 255, 255, 0);\n"
+                                      "border-image:url(UI/imgsource/setting2.png);\n"
+                                      "}")
+        self.AccountButton.setObjectName("AccountButton")
 
-        # Left side Pushbutton #4 -> Account Control Button
+        # Left side Pushbutton #5 -> Account Control Button
         self.LogOutButton = QtWidgets.QPushButton(MainForm)
-        self.LogOutButton.setGeometry(QtCore.QRect(6, 1260, 51, 51))
-        self.LogOutButton.setObjectName("pushButton")
+        self.LogOutButton.setGeometry(QtCore.QRect(6, 290, 51, 51))
+        self.LogOutButton.setStyleSheet("QPushButton{\n"
+                                         "background-color: rgba(255, 255, 255, 0);\n"
+                                         "border-image:url(UI/imgsource/exit1.png);\n"
+                                         "}\n"
+                                         "QPushButton:hover{\n"
+                                         "background-color: rgba(255, 255, 255, 0);\n"
+                                         "border-image:url(UI/imgsource/exit2.png);\n"
+                                         "}")
+        self.LogOutButton.setObjectName("LogOutButton")
+
+        # Sync Button
+        self.SyncButton = QtWidgets.QPushButton(MainForm)
+        self.SyncButton.setGeometry(QtCore.QRect(1220, 77, 41, 41))
+        self.SyncButton.setStyleSheet("QPushButton{\n"
+                                        "background-color: rgba(255, 255, 255, 0);\n"
+                                        "border-image:url(UI/imgsource/sync1.png);\n"
+                                        "}\n"
+                                        "QPushButton:hover{\n"
+                                        "background-color: rgba(255, 255, 255, 0);\n"
+                                        "border-image:url(UI/imgsource/sync2.png);\n"
+                                        "}")
+        self.SyncButton.setObjectName("LogOutButton")
 
         self.retranslateUi(MainForm)
         QtCore.QMetaObject.connectSlotsByName(MainForm)
