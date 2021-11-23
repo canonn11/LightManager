@@ -159,20 +159,19 @@ class Login_Page(QWidget):
                                                  "Manager"))
 
 
-    # 여기에 id,pw 오류처리 및 확인과정 들어가야됨
+    # LoginButton Event Handler
     def switch_login_page(self):
         self.ID = self.lineEdit_ID.text()
         self.Password = self.lineEdit_Password.text()
+        login_procedure = "call check_login_success('"+self.ID+"','"+self.Password+"',"+"@output"+")"
+        self.cursor.execute(login_procedure)
+        self.output = "select @output"
+        self.cursor.execute(self.output)
+        self.login_result = self.cursor.fetchone()
 
-        loginprocedure = "call check_login_success('"+self.ID+"','"+self.Password+"',"+"@resultcode"+")"
-        self.cursor.execute(loginprocedure)
-        self.resultcode = "select @resultcode"
-        self.cursor.execute(self.resultcode)
-        self.result = self.cursor.fetchall()
-
-        print(self.result)
-
-        if(self.result==0):
+        #Login Success => go mainpage
+        if(self.login_result[0]==0):
             self.switch_window_to_main.emit()
+        #Login Failed => Warning Message
         else:
             self.show_login_warning.emit()
