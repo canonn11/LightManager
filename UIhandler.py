@@ -9,7 +9,7 @@ import pymysql
 
 class UIHandler:
     def __init__(self):
-        self.connection = pymysql.connect(
+        """self.connection = pymysql.connect(
             host='112.172.221.228',
             port=3306,
             user='software',
@@ -23,7 +23,7 @@ class UIHandler:
 
         version = self.cursor.fetchone()
 
-        print("Database version : %s " % version)
+        print("Database version : %s " % version)"""
 
         self.login_page = Login_Page()
         self.main_page = Main_Page()
@@ -32,11 +32,11 @@ class UIHandler:
         self.MainForm = QtWidgets.QWidget()
 
     def show_login_page(self):
-        self.login_page.cursor = self.cursor
+        #self.login_page.cursor = self.cursor
         self.MainForm.close()
         self.login_page.setupUi(self.LoginForm)
         self.login_page.switch_window_to_main.connect(self.show_main_page)
-        self.login_page.show_login_warning.connect(self.show_login_warning)
+        #self.login_page.show_login_warning.connect(self.show_login_warning)
         self.LoginForm.show()
 
     def show_main_page(self):
@@ -44,7 +44,7 @@ class UIHandler:
         self.main_page.Password = self.login_page.Password
         self.LoginForm.close()
         self.main_page.setupUi(self.MainForm)
-        #self.main_page.switch_window_to_webcam.connect(self.show_webcam_page)
+        self.main_page.show_logout_warning.connect(self.show_logout_message)
         self.MainForm.show()
 
     def show_login_warning(self):
@@ -54,3 +54,16 @@ class UIHandler:
         login_alert.setWindowTitle("Warning")
         login_alert.setInformativeText('아이디 또는 비밀번호를 확인해주세요.')
         login_alert.exec_()
+
+    def show_logout_message(self):
+        result=0
+        logout_alert = QMessageBox()
+        logout_alert.setWindowTitle("Warning")
+        logout_alert.setText("로그아웃 하시겠습니까?")
+        logout_alert.setIcon(QMessageBox.Question)
+        logout_alert.setStandardButtons(QMessageBox.Ok | QMessageBox.Cancel)
+        logout_alert.setDefaultButton(QMessageBox.Ok)
+
+        result = logout_alert.exec()
+        if result == QMessageBox.Ok:
+            self.show_login_page()

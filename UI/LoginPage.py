@@ -40,7 +40,7 @@ class Login_Page(QWidget):
                                        "background-color: rgb(132, 132, 132);\n"
                                        "border-radius : 12px;\n"
                                        "}")
-        self.LoginButton.setObjectName("LoginButton")
+        #self.LoginButton.setObjectName("LoginButton")
         self.LoginButton.clicked.connect(self.switch_login_page)
 
         # Logo Text
@@ -163,7 +163,9 @@ class Login_Page(QWidget):
     def switch_login_page(self):
         self.ID = self.lineEdit_ID.text()
         self.Password = self.lineEdit_Password.text()
-        login_procedure = "call check_login_success('"+self.ID+"','"+self.Password+"',"+"@output"+")"
+        self.switch_window_to_main.emit()
+
+        """login_procedure = "call check_login_success('"+self.ID+"','"+self.Password+"',"+"@output"+")"
         self.cursor.execute(login_procedure)
         self.output = "select @output"
         self.cursor.execute(self.output)
@@ -174,4 +176,4 @@ class Login_Page(QWidget):
             self.switch_window_to_main.emit()
         #Login Failed => Warning Message
         else:
-            self.show_login_warning.emit()
+            self.show_login_warning.emit()"""
