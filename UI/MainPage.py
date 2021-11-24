@@ -4,8 +4,14 @@ from PyQt5.QtGui import *
 
 class Main_Page(QWidget):
     show_logout_warning = QtCore.pyqtSignal()
+    show_add_account_page = QtCore.pyqtSignal()
+    account_number = 0
 
     def setupUi(self, MainForm):
+        self.cursor.execute("select count(*) from id_table;")
+        self.result = self.cursor.fetchone()
+        self.account_number = self.result[0]
+
         MainForm.setObjectName("MainForm")
         MainForm.resize(1280, 720)
         self.Background = QtWidgets.QLabel(MainForm)
@@ -134,7 +140,7 @@ class Main_Page(QWidget):
 
         # page #0 top letter label
         self.system_overview_label = QtWidgets.QLabel(self.page_0)
-        self.system_overview_label.setGeometry(QtCore.QRect(20, 10, 181, 31))
+        self.system_overview_label.setGeometry(QtCore.QRect(20, 13, 181, 31))
         font = QtGui.QFont()
         font.setFamily("맑은 고딕")
         font.setPointSize(14)
@@ -153,6 +159,7 @@ class Main_Page(QWidget):
                                       "border-image:url(UI/imgsource/sync2.png);\n"
                                       "}")
         self.page0_refresh_button.setObjectName("page0_refresh_button")
+
         #
         self.stackedWidget.addWidget(self.page_0)
 
@@ -174,14 +181,14 @@ class Main_Page(QWidget):
 
         # page #1 top letter label
         self.light_status_label = QtWidgets.QLabel(self.page_1)
-        self.light_status_label.setGeometry(QtCore.QRect(20, 10, 181, 31))
+        self.light_status_label.setGeometry(QtCore.QRect(20, 13, 181, 31))
         font = QtGui.QFont()
         font.setFamily("맑은 고딕")
         font.setPointSize(14)
         self.light_status_label.setFont(font)
         self.light_status_label.setObjectName("light_status_label")
 
-
+        #
         self.stackedWidget.addWidget(self.page_1)
 
         # page #2
@@ -203,7 +210,7 @@ class Main_Page(QWidget):
 
         # page #2 top letter label
         self.light_control_label = QtWidgets.QLabel(self.page_2)
-        self.light_control_label.setGeometry(QtCore.QRect(20, 10, 181, 31))
+        self.light_control_label.setGeometry(QtCore.QRect(20, 13, 181, 31))
         font = QtGui.QFont()
         font.setFamily("맑은 고딕")
         font.setPointSize(14)
@@ -232,13 +239,125 @@ class Main_Page(QWidget):
 
         # page #3 top letter label
         self.account_label = QtWidgets.QLabel(self.page_3)
-        self.account_label.setGeometry(QtCore.QRect(20, 10, 180, 31))
+        self.account_label.setGeometry(QtCore.QRect(20, 13, 180, 31))
         font = QtGui.QFont()
         font.setFamily("맑은 고딕")
         font.setPointSize(14)
         self.account_label.setFont(font)
         self.account_label.setFrameShape(QtWidgets.QFrame.NoFrame)
         self.account_label.setObjectName("account_label")
+
+        # page #3 white background 1
+        self.white_background_1 = QtWidgets.QLabel(self.page_3)
+        self.white_background_1.setGeometry(QtCore.QRect(40, 160, 451, 451))
+        self.white_background_1.setStyleSheet("background-color: rgb(255, 255, 255);\n"
+                                              "border-radius:12px;")
+        self.white_background_1.setObjectName("white_background_1")
+
+        # page #3 white background 2
+        self.white_background_2 = QtWidgets.QLabel(self.page_3)
+        self.white_background_2.setGeometry(QtCore.QRect(540, 160, 451, 451))
+        self.white_background_2.setStyleSheet("background-color: rgb(255, 255, 255);\n"
+                                              "border-radius:12px;")
+        self.white_background_2.setObjectName("white_background_2")
+
+        # page #3 account listwidget
+        self.listWidget = QtWidgets.QListWidget(self.page_3)
+        self.listWidget.setGeometry(QtCore.QRect(545, 165, 441, 441))
+        font = QtGui.QFont()
+        font.setPointSize(12)
+        self.listWidget.setFont(font)
+        self.listWidget.setStyleSheet("border-radius:1px;")
+        self.listWidget.setObjectName("listWidget")
+        item = QtWidgets.QListWidgetItem()
+        font = QtGui.QFont()
+        font.setFamily("맑은 고딕")
+        font.setPointSize(12)
+        item.setFont(font)
+
+        self.cursor.execute("select * from id_table;")
+        self.result = self.cursor.fetchall()
+
+        for i in range(0, self.account_number):
+            item = self.listWidget.item(i)
+            if (self.result[i][4] == 1):
+                self.listWidget.addItem(QListWidgetItem(self.result[i][2]+"(admin)"))
+            else:
+                self.listWidget.addItem(QListWidgetItem(self.result[i][2]+"(user)"))
+
+        # page #3 all acount text label
+        self.all_account_label = QtWidgets.QLabel(self.page_3)
+        self.all_account_label.setGeometry(QtCore.QRect(550, 90, 241, 51))
+        font = QtGui.QFont()
+        font.setFamily("맑은 고딕")
+        font.setPointSize(18)
+        font.setBold(False)
+        font.setWeight(50)
+        self.all_account_label.setFont(font)
+        self.all_account_label.setObjectName("all_account_label")
+
+        # page #3 account info text label
+        self.account_info_label = QtWidgets.QLabel(self.page_3)
+        self.account_info_label.setGeometry(QtCore.QRect(50, 90, 241, 51))
+        font = QtGui.QFont()
+        font.setFamily("맑은 고딕")
+        font.setPointSize(18)
+        font.setBold(False)
+        font.setWeight(50)
+        self.account_info_label.setFont(font)
+        self.account_info_label.setObjectName("account_info_label")
+
+        # page #3 add account button
+        self.add_account_button = QtWidgets.QPushButton(self.page_3)
+        self.add_account_button.setGeometry(QtCore.QRect(1030, 160, 131, 51))
+        font = QtGui.QFont()
+        font.setFamily("맑은 고딕")
+        font.setPointSize(12)
+        self.add_account_button.setFont(font)
+        self.add_account_button.setStyleSheet("QPushButton{\n"
+                                                "background-color: rgb(53, 174, 255);\n"
+                                                "border-radius:12px;\n"
+                                                "}\n"
+                                                "QPushButton:hover{\n"
+                                                "background-color: rgb(153, 153, 153);\n"
+                                                "border-radius:12px;\n"
+                                                "}")
+        self.add_account_button.setObjectName("add_account_button")
+        self.add_account_button.clicked.connect(self.add_account_page)
+
+        # page #3 delete account button
+        self.delete_account_button = QtWidgets.QPushButton(self.page_3)
+        self.delete_account_button.setGeometry(QtCore.QRect(1030, 230, 131, 51))
+        font = QtGui.QFont()
+        font.setFamily("맑은 고딕")
+        font.setPointSize(12)
+        self.delete_account_button.setFont(font)
+        self.delete_account_button.setStyleSheet("QPushButton{\n"
+                                              "background-color: rgb(255, 126, 128);\n"
+                                              "border-radius:12px;\n"
+                                              "}\n"
+                                              "QPushButton:hover{\n"
+                                              "background-color: rgb(153, 153, 153);\n"
+                                              "border-radius:12px;\n"
+                                              "}")
+        self.delete_account_button.setObjectName("delete_account_button")
+
+        # page #3 auth control button
+        self.auth_control_button = QtWidgets.QPushButton(self.page_3)
+        self.auth_control_button.setGeometry(QtCore.QRect(1030, 300, 131, 51))
+        font = QtGui.QFont()
+        font.setFamily("맑은 고딕")
+        font.setPointSize(12)
+        self.auth_control_button.setFont(font)
+        self.auth_control_button.setStyleSheet("QPushButton{\n"
+                                                 "background-color: rgb(255, 237, 32);\n"
+                                                 "border-radius:12px;\n"
+                                                 "}\n"
+                                                 "QPushButton:hover{\n"
+                                                 "background-color: rgb(153, 153, 153);\n"
+                                                 "border-radius:12px;\n"
+                                                 "}")
+        self.auth_control_button.setObjectName("auth_control_button")
 
         #
         self.stackedWidget.addWidget(self.page_3)
@@ -255,6 +374,17 @@ class Main_Page(QWidget):
         self.light_status_label.setText(_translate("MainForm", "조명 상태"))
         self.light_control_label.setText(_translate("MainForm", "조명 제어"))
         self.account_label.setText(_translate("MainForm", "계정 관리"))
+        __sortingEnabled = self.listWidget.isSortingEnabled()
+        self.listWidget.setSortingEnabled(False)
+        self.listWidget.setSortingEnabled(__sortingEnabled)
+        self.all_account_label.setText(_translate("MainForm", "전체 계정"))
+        self.account_info_label.setText(_translate("MainForm", "계정 정보"))
+        self.add_account_button.setText(_translate("MainForm", "계정 추가"))
+        self.delete_account_button.setText(_translate("MainForm", "계정 삭제"))
+        self.auth_control_button.setText(_translate("MainForm", "등급 제어"))
+
+    def add_account_page(self):
+        self.add.account.page.emit()
 
     def switch_layout_0(self):
         self.stackedWidget.setCurrentIndex(0)

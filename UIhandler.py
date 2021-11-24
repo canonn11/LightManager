@@ -9,7 +9,7 @@ import pymysql
 
 class UIHandler:
     def __init__(self):
-        """self.connection = pymysql.connect(
+        self.connection = pymysql.connect(
             host='112.172.221.228',
             port=3306,
             user='software',
@@ -23,7 +23,7 @@ class UIHandler:
 
         version = self.cursor.fetchone()
 
-        print("Database version : %s " % version)"""
+        print("Database version : %s " % version)
 
         self.login_page = Login_Page()
         self.main_page = Main_Page()
@@ -32,19 +32,21 @@ class UIHandler:
         self.MainForm = QtWidgets.QWidget()
 
     def show_login_page(self):
-        #self.login_page.cursor = self.cursor
+        self.login_page.cursor = self.cursor
         self.MainForm.close()
         self.login_page.setupUi(self.LoginForm)
         self.login_page.switch_window_to_main.connect(self.show_main_page)
-        #self.login_page.show_login_warning.connect(self.show_login_warning)
+        self.login_page.show_login_warning.connect(self.show_login_warning)
         self.LoginForm.show()
 
     def show_main_page(self):
         self.main_page.ID = self.login_page.ID
         self.main_page.Password = self.login_page.Password
+        self.main_page.cursor = self.cursor
         self.LoginForm.close()
         self.main_page.setupUi(self.MainForm)
         self.main_page.show_logout_warning.connect(self.show_logout_message)
+        self.main_page.show_add_account_page.connect(self.show_add_account)
         self.MainForm.show()
 
     def show_login_warning(self):
@@ -67,3 +69,6 @@ class UIHandler:
         result = logout_alert.exec()
         if result == QMessageBox.Ok:
             self.show_login_page()
+
+    def show_add_account(self):
+
