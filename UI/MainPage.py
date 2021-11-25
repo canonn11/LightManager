@@ -5,6 +5,7 @@ from PyQt5.QtGui import *
 class Main_Page(QWidget):
     show_logout_warning = QtCore.pyqtSignal()
     show_add_account_page = QtCore.pyqtSignal()
+    add_update = QtCore.pyqtSignal()
     account_number = 0
 
     def setupUi(self, MainForm):
@@ -274,16 +275,14 @@ class Main_Page(QWidget):
         font.setFamily("맑은 고딕")
         font.setPointSize(12)
         item.setFont(font)
+        self.listWidget.itemSelectionChanged.connect(self.on_change)
 
         self.cursor.execute("select * from id_table;")
         self.result = self.cursor.fetchall()
 
         for i in range(0, self.account_number):
             item = self.listWidget.item(i)
-            if (self.result[i][4] == 1):
-                self.listWidget.addItem(QListWidgetItem(self.result[i][2]))
-            else:
-                self.listWidget.addItem(QListWidgetItem(self.result[i][2]))
+            self.listWidget.addItem(QListWidgetItem(self.result[i][2]))
 
         # page #3 all acount text label
         self.all_account_label = QtWidgets.QLabel(self.page_3)
@@ -359,6 +358,82 @@ class Main_Page(QWidget):
                                                  "}")
         self.auth_control_button.setObjectName("auth_control_button")
 
+        # page #3 id text label
+        self.id_label = QtWidgets.QLabel(self.page_3)
+        self.id_label.setGeometry(QtCore.QRect(70, 200, 131, 41))
+        font = QtGui.QFont()
+        font.setFamily("맑은 고딕")
+        font.setPointSize(16)
+        self.id_label.setFont(font)
+        self.id_label.setObjectName("id_label")
+
+
+        # page #3 name text label
+        self.name_label = QtWidgets.QLabel(self.page_3)
+        self.name_label.setGeometry(QtCore.QRect(70, 300, 131, 41))
+        font = QtGui.QFont()
+        font.setFamily("맑은 고딕")
+        font.setPointSize(16)
+        self.name_label.setFont(font)
+        self.name_label.setObjectName("name_label")
+
+        # page #3 location text label
+        self.loc_label = QtWidgets.QLabel(self.page_3)
+        self.loc_label.setGeometry(QtCore.QRect(70, 400, 131, 41))
+        font = QtGui.QFont()
+        font.setFamily("맑은 고딕")
+        font.setPointSize(16)
+        self.loc_label.setFont(font)
+        self.loc_label.setObjectName("loc_label")
+
+        # page #3 auth text label
+        self.auth_label = QtWidgets.QLabel(self.page_3)
+        self.auth_label.setGeometry(QtCore.QRect(70, 500, 131, 41))
+        font = QtGui.QFont()
+        font.setFamily("맑은 고딕")
+        font.setPointSize(16)
+        self.auth_label.setFont(font)
+        self.auth_label.setObjectName("auth_label")
+
+        # page #3 id result label
+        self.id_result = QtWidgets.QLabel(self.page_3)
+        self.id_result.setGeometry(QtCore.QRect(220, 200, 251, 41))
+        font = QtGui.QFont()
+        font.setFamily("맑은 고딕")
+        font.setPointSize(16)
+        self.id_result.setFont(font)
+        self.id_result.setObjectName("id_result")
+
+        # page #3 name result label
+        self.name_result = QtWidgets.QLabel(self.page_3)
+        self.name_result.setGeometry(QtCore.QRect(220, 300, 251, 41))
+        font = QtGui.QFont()
+        font.setFamily("맑은 고딕")
+        font.setPointSize(16)
+        self.name_result.setFont(font)
+        self.name_result.setText("")
+        self.name_result.setObjectName("name_result")
+
+        # page #3 location result label
+        self.loc_result = QtWidgets.QLabel(self.page_3)
+        self.loc_result.setGeometry(QtCore.QRect(220, 400, 251, 41))
+        font = QtGui.QFont()
+        font.setFamily("맑은 고딕")
+        font.setPointSize(16)
+        self.loc_result.setFont(font)
+        self.loc_result.setText("")
+        self.loc_result.setObjectName("loc_result")
+
+        # page #3 auth result label
+        self.auth_result = QtWidgets.QLabel(self.page_3)
+        self.auth_result.setGeometry(QtCore.QRect(220, 500, 251, 41))
+        font = QtGui.QFont()
+        font.setFamily("맑은 고딕")
+        font.setPointSize(16)
+        self.auth_result.setFont(font)
+        self.auth_result.setText("")
+        self.auth_result.setObjectName("auth_result")
+
         #
         self.stackedWidget.addWidget(self.page_3)
 
@@ -383,6 +458,10 @@ class Main_Page(QWidget):
         self.add_account_button.setText(_translate("MainForm", "계정 추가"))
         self.delete_account_button.setText(_translate("MainForm", "계정 삭제"))
         self.auth_control_button.setText(_translate("MainForm", "등급 제어"))
+        self.id_label.setText(_translate("MainForm", "ID"))
+        self.name_label.setText(_translate("MainForm", "이름"))
+        self.loc_label.setText(_translate("MainForm", "위치"))
+        self.auth_label.setText(_translate("MainForm", "권한"))
 
     def add_account_page(self):
         self.show_add_account_page.emit()
@@ -401,3 +480,24 @@ class Main_Page(QWidget):
 
     def logout_main_page(self):
         self.show_logout_warning.emit()
+
+    def add_list_update(self):
+        self.cursor.execute("select count(*) from id_table;")
+        self.count = self.cursor.fetchone()
+        data_count = self.count[0]
+
+        if(data_count !=self.account_number):
+            self.listWidget.addItem(QListWidgetItem(self.NAME))
+
+    def on_change(self):
+        value = self.listWidget.currentRow()
+        query = "select * from id_table limit "+str(value)+",1;"
+        self.cursor.execute(query)
+        self.result = self.cursor.fetchall()
+        self.id_result.setText(self.result[0][0])
+        self.name_result.setText(self.result[0][1])
+        self.loc_result.setText(self.result[0][2])
+        if(self.result[0][4] == 1):
+            self.auth_result.setText("관리자")
+        else:
+            self.auth_result.setText("유저")

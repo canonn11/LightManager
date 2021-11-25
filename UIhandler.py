@@ -43,13 +43,12 @@ class UIHandler:
         self.LoginForm.show()
 
     def show_main_page(self):
-        self.main_page.ID = self.login_page.ID
-        self.main_page.Password = self.login_page.Password
         self.main_page.cursor = self.cursor
         self.LoginForm.close()
         self.main_page.setupUi(self.MainForm)
         self.main_page.show_logout_warning.connect(self.show_logout_message)
         self.main_page.show_add_account_page.connect(self.show_add_account)
+        self.main_page.add_update.connect(self.main_page.add_list_update)
         self.MainForm.show()
 
     def show_add_account(self):
@@ -62,7 +61,8 @@ class UIHandler:
 
     def add_account_success(self):
         self.AccountForm.close()
-        self.main_page.page_3.repaint()
+        self.main_page.NAME =self.add_account.NAME
+        self.main_page.add_update.emit()
 
     def close_add_account_page(self):
         self.AccountForm.close()
