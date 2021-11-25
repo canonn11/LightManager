@@ -9,6 +9,7 @@ class Login_Page(QWidget):
     show_login_warning = QtCore.pyqtSignal()
     ID = '0'
     Password = '0'
+    AUTH = -1
 
     def setupUi(self, LoginForm):
         LoginForm.setObjectName("LoginForm")
@@ -163,7 +164,6 @@ class Login_Page(QWidget):
     def switch_login_page(self):
         self.ID = self.lineEdit_ID.text()
         self.Password = self.lineEdit_Password.text()
-        #self.switch_window_to_main.emit()
 
         login_procedure = "call check_login_success('"+self.ID+"','"+self.Password+"',"+"@output"+")"
         self.cursor.execute(login_procedure)
@@ -173,6 +173,9 @@ class Login_Page(QWidget):
 
         #Login Success => go mainpage
         if(self.login_result[0]==0):
+            self.cursor.execute("select * from id_table where user_id = '" + self.ID + "';")
+            self.result = self.cursor.fetchall()
+            self.AUTH = self.result[0][4]
             self.switch_window_to_main.emit()
         #Login Failed => Warning Message
         else:

@@ -340,6 +340,7 @@ class Main_Page(QWidget):
                                               "border-radius:12px;\n"
                                               "}")
         self.delete_account_button.setObjectName("delete_account_button")
+        self.delete_account_button.clicked.connect(self.delete_account)
 
         # page #3 auth control button
         self.auth_control_button = QtWidgets.QPushButton(self.page_3)
@@ -357,6 +358,7 @@ class Main_Page(QWidget):
                                                  "border-radius:12px;\n"
                                                  "}")
         self.auth_control_button.setObjectName("auth_control_button")
+        self.auth_control_button.clicked.connect(self.auth_control)
 
         # page #3 id text label
         self.id_label = QtWidgets.QLabel(self.page_3)
@@ -482,22 +484,46 @@ class Main_Page(QWidget):
         self.show_logout_warning.emit()
 
     def add_list_update(self):
-        self.cursor.execute("select count(*) from id_table;")
-        self.count = self.cursor.fetchone()
-        data_count = self.count[0]
-
-        if(data_count !=self.account_number):
-            self.listWidget.addItem(QListWidgetItem(self.NAME))
+        self.listWidget.addItem(QListWidgetItem(self.NAME))
+        self.stackedWidget.setCurrentIndex(0)
+        self.stackedWidget.setCurrentIndex(3)
 
     def on_change(self):
         value = self.listWidget.currentRow()
         query = "select * from id_table limit "+str(value)+",1;"
         self.cursor.execute(query)
-        self.result = self.cursor.fetchall()
-        self.id_result.setText(self.result[0][0])
-        self.name_result.setText(self.result[0][1])
-        self.loc_result.setText(self.result[0][2])
-        if(self.result[0][4] == 1):
+        result = self.cursor.fetchall()
+        self.id_result.setText(result[0][0])
+        self.name_result.setText(result[0][1])
+        self.loc_result.setText(result[0][2])
+        if(result[0][4] == 1):
             self.auth_result.setText("관리자")
         else:
             self.auth_result.setText("유저")
+
+    def delete_account(self):
+        value = self.listWidget.currentRow()
+        if(value==-1):
+            pass
+        else:
+            query = "select * from id_table limit " + str(value) + ",1;"
+            self.cursor.execute(query)
+            result = self.cursor.fetchall()
+            IDvalue = result[0][0]
+            query = "delete from id_table where user_id = '"+IDvalue+"';"
+            self.cursor.execute(query)
+            self.listWidget.takeItem(value)
+
+    def auth_control(self):
+        value = self.listWidget.currentRow()
+        query = "select * from id_table limit " + str(value) + ",1;"
+        self.cursor.execute(query)
+        result = self.cursor.fetchall()
+        AUTHvalue = result[0][4]
+
+        if(self.AUTH ==1) and (AUTHvalue<1):
+            query = "update id_table set user_auth = 1 where user_id = '"+result[0][0]+"';"
+            self.cursor.execute(query)
+            self.auth_result.repaint()
+        else:
+            pass

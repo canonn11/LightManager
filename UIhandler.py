@@ -44,6 +44,7 @@ class UIHandler:
 
     def show_main_page(self):
         self.main_page.cursor = self.cursor
+        self.main_page.AUTH = self.login_page.AUTH
         self.LoginForm.close()
         self.main_page.setupUi(self.MainForm)
         self.main_page.show_logout_warning.connect(self.show_logout_message)
