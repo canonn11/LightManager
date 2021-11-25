@@ -281,9 +281,9 @@ class Main_Page(QWidget):
         for i in range(0, self.account_number):
             item = self.listWidget.item(i)
             if (self.result[i][4] == 1):
-                self.listWidget.addItem(QListWidgetItem(self.result[i][2]+"(admin)"))
+                self.listWidget.addItem(QListWidgetItem(self.result[i][2]))
             else:
-                self.listWidget.addItem(QListWidgetItem(self.result[i][2]+"(user)"))
+                self.listWidget.addItem(QListWidgetItem(self.result[i][2]))
 
         # page #3 all acount text label
         self.all_account_label = QtWidgets.QLabel(self.page_3)
@@ -368,7 +368,8 @@ class Main_Page(QWidget):
 
     def retranslateUi(self, MainForm):
         _translate = QtCore.QCoreApplication.translate
-        MainForm.setWindowTitle(_translate("MainForm", "Form"))
+        MainForm.setWindowTitle(_translate("MainForm", "LightManager"))
+        MainForm.setWindowIcon(QIcon("UI/imgsource/lightbulb.png"))
         self.LightManager.setText(_translate("MainForm", "Light Manager"))
         self.system_overview_label.setText(_translate("MainForm", "시스템 현황"))
         self.light_status_label.setText(_translate("MainForm", "조명 상태"))
@@ -384,7 +385,7 @@ class Main_Page(QWidget):
         self.auth_control_button.setText(_translate("MainForm", "등급 제어"))
 
     def add_account_page(self):
-        self.add.account.page.emit()
+        self.show_add_account_page.emit()
 
     def switch_layout_0(self):
         self.stackedWidget.setCurrentIndex(0)

@@ -1,5 +1,6 @@
 from UI.LoginPage import Login_Page
 from UI.MainPage import Main_Page
+from UI.AddAccount import Add_Account
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
@@ -27,9 +28,11 @@ class UIHandler:
 
         self.login_page = Login_Page()
         self.main_page = Main_Page()
+        self.add_account = Add_Account()
 
         self.LoginForm = QtWidgets.QWidget()
         self.MainForm = QtWidgets.QWidget()
+        self.AccountForm = QtWidgets.QWidget()
 
     def show_login_page(self):
         self.login_page.cursor = self.cursor
@@ -49,12 +52,35 @@ class UIHandler:
         self.main_page.show_add_account_page.connect(self.show_add_account)
         self.MainForm.show()
 
+    def show_add_account(self):
+        self.add_account.cursor = self.cursor
+        self.add_account.setupUi(self.AccountForm)
+        self.add_account.add_account_success.connect(self.add_account_success)
+        self.add_account.show_add_account_warning.connect(self.show_add_account_warning)
+        self.add_account.close_add_account_page.connect(self.close_add_account_page)
+        self.AccountForm.show()
+
+    def add_account_success(self):
+        self.AccountForm.close()
+        self.main_page.page_3.repaint()
+
+    def close_add_account_page(self):
+        self.AccountForm.close()
+
     def show_login_warning(self):
         login_alert = QMessageBox()
         login_alert.setIcon(QMessageBox.Warning)
         login_alert.setText("로그인에 실패하였습니다.")
         login_alert.setWindowTitle("Warning")
         login_alert.setInformativeText('아이디 또는 비밀번호를 확인해주세요.')
+        login_alert.exec_()
+
+    def show_add_account_warning(self):
+        login_alert = QMessageBox()
+        login_alert.setIcon(QMessageBox.Warning)
+        login_alert.setText("계정 추가에 실패하였습니다.")
+        login_alert.setWindowTitle("Warning")
+        login_alert.setInformativeText('빈칸을 확인해주세요')
         login_alert.exec_()
 
     def show_logout_message(self):
@@ -70,5 +96,4 @@ class UIHandler:
         if result == QMessageBox.Ok:
             self.show_login_page()
 
-    def show_add_account(self):
 
