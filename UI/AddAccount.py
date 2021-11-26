@@ -6,6 +6,7 @@ class Add_Account(QWidget):
     add_account_success = QtCore.pyqtSignal()
     show_add_account_warning = QtCore.pyqtSignal()
     close_add_account_page = QtCore.pyqtSignal()
+    id_duplicate_warning = QtCore.pyqtSignal()
     ID = ''
     PW=''
     NAME = ''
@@ -208,14 +209,18 @@ class Add_Account(QWidget):
             self.AUTH = '0'
         else:
             self.AUTH = None
-
-
-        if(self.ID == '') or(self.PW == '')or(self.NAME == '')or(self.LOC == '')or(self.AUTH == None):
+        duplicate_check = "select * from id_table where user_id = '"+self.ID+"';"
+        self.cursor.execute(duplicate_check)
+        result = self.cursor.fetchone()
+        if(self.ID == '') or (self.PW == '') or (self.NAME == '') or (self.LOC == '') or (self.AUTH == None):
             self.show_add_account_warning.emit()
         else:
-            add_procedure="call user_plus('"+self.NAME+"','"+self.ID+"','"+self.PW+"','"+self.LOC+"',"+self.AUTH+")"
-            self.cursor.execute(add_procedure)
-            self.add_account_success.emit()
+            if (result is not None):
+                self.id_duplicate_warning.emit()
+            else:
+                add_procedure = "call user_plus('" + self.NAME + "','" + self.ID + "','" + self.PW + "','" + self.LOC + "'," + self.AUTH + ")"
+                self.cursor.execute(add_procedure)
+                self.add_account_success.emit()
 
     def close_page(self):
         self.close_add_account_page.emit()

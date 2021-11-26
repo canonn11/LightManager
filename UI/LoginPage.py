@@ -176,6 +176,7 @@ class Login_Page(QWidget):
             self.cursor.execute("select * from id_table where user_id = '" + self.ID + "';")
             self.result = self.cursor.fetchall()
             self.AUTH = self.result[0][4]
+            self.loginID = self.ID
             self.switch_window_to_main.emit()
         #Login Failed => Warning Message
         else:

@@ -5,6 +5,9 @@ from PyQt5.QtGui import *
 class Main_Page(QWidget):
     show_logout_warning = QtCore.pyqtSignal()
     show_add_account_page = QtCore.pyqtSignal()
+    show_auth_warning = QtCore.pyqtSignal()
+    show_auth_check = QtCore.pyqtSignal()
+    show_delete_warning = QtCore.pyqtSignal()
     add_update = QtCore.pyqtSignal()
     account_number = 0
 
@@ -103,7 +106,7 @@ class Main_Page(QWidget):
         self.AccountButton.setObjectName("AccountButton")
         self.AccountButton.clicked.connect(self.switch_layout_3)
 
-        # Left side Pushbutton #5 -> Account Control Button
+        # Left side Pushbutton #5 -> Logout Button
         self.LogOutButton = QtWidgets.QPushButton(MainForm)
         self.LogOutButton.setGeometry(QtCore.QRect(6, 290, 51, 51))
         self.LogOutButton.setStyleSheet("QPushButton{\n"
@@ -282,7 +285,7 @@ class Main_Page(QWidget):
 
         for i in range(0, self.account_number):
             item = self.listWidget.item(i)
-            self.listWidget.addItem(QListWidgetItem(self.result[i][2]))
+            self.listWidget.addItem(QListWidgetItem(self.result[i][0]))
 
         # page #3 all acount text label
         self.all_account_label = QtWidgets.QLabel(self.page_3)
@@ -466,7 +469,10 @@ class Main_Page(QWidget):
         self.auth_label.setText(_translate("MainForm", "권한"))
 
     def add_account_page(self):
-        self.show_add_account_page.emit()
+        if(self.AUTH == 1):
+            self.show_add_account_page.emit()
+        else:
+            self.show_auth_warning.emit()
 
     def switch_layout_0(self):
         self.stackedWidget.setCurrentIndex(0)
@@ -484,46 +490,48 @@ class Main_Page(QWidget):
         self.show_logout_warning.emit()
 
     def add_list_update(self):
-        self.listWidget.addItem(QListWidgetItem(self.NAME))
+        self.listWidget.addItem(QListWidgetItem(self.ID))
         self.stackedWidget.setCurrentIndex(0)
         self.stackedWidget.setCurrentIndex(3)
 
     def on_change(self):
-        value = self.listWidget.currentRow()
-        query = "select * from id_table limit "+str(value)+",1;"
+        value = self.listWidget.currentItem().text()
+        query = "select * from id_table where user_id ='"+value+"';"
         self.cursor.execute(query)
         result = self.cursor.fetchall()
         self.id_result.setText(result[0][0])
-        self.name_result.setText(result[0][1])
-        self.loc_result.setText(result[0][2])
+        self.name_result.setText(result[0][2])
+        self.loc_result.setText(result[0][3])
         if(result[0][4] == 1):
             self.auth_result.setText("관리자")
         else:
             self.auth_result.setText("유저")
 
     def delete_account(self):
-        value = self.listWidget.currentRow()
-        if(value==-1):
+        value = self.listWidget.currentItem().text()
+        row = self.listWidget.currentRow()
+        if(row==-1):
             pass
         else:
-            query = "select * from id_table limit " + str(value) + ",1;"
-            self.cursor.execute(query)
-            result = self.cursor.fetchall()
-            IDvalue = result[0][0]
-            query = "delete from id_table where user_id = '"+IDvalue+"';"
-            self.cursor.execute(query)
-            self.listWidget.takeItem(value)
+            if(self.AUTH == 0):
+                self.show_auth_warning.emit()
+            elif(self.loginID == value):
+                self.show_delete_warning.emit()
+            else:
+                query = "delete from id_table where user_id = '"+value+"';"
+                self.cursor.execute(query)
+                self.listWidget.takeItem(row)
 
     def auth_control(self):
-        value = self.listWidget.currentRow()
-        query = "select * from id_table limit " + str(value) + ",1;"
+        value = self.listWidget.currentItem().text()
+        query = "select * from id_table where user_id ='"+value+"';"
         self.cursor.execute(query)
         result = self.cursor.fetchall()
         AUTHvalue = result[0][4]
 
         if(self.AUTH ==1) and (AUTHvalue<1):
-            query = "update id_table set user_auth = 1 where user_id = '"+result[0][0]+"';"
+            query = "update id_table set user_auth = 1 where user_id = '"+value+"';"
             self.cursor.execute(query)
-            self.auth_result.repaint()
+            self.auth_result.setText("관리자")
         else:
-            pass
+            self.show_auth_check.emit()

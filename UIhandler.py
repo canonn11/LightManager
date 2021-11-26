@@ -34,55 +34,103 @@ class UIHandler:
         self.MainForm = QtWidgets.QWidget()
         self.AccountForm = QtWidgets.QWidget()
 
+        self.login_page.switch_window_to_main.connect(self.show_main_page)
+        self.login_page.show_login_warning.connect(self.show_login_warning_alert)
+
+        self.main_page.show_logout_warning.connect(self.show_logout_message)
+        self.main_page.show_add_account_page.connect(self.show_add_account)
+        self.main_page.add_update.connect(self.main_page.add_list_update)
+        self.main_page.show_auth_warning.connect((self.show_auth_warning))
+        self.main_page.show_auth_check.connect((self.show_auth_check))
+        self.main_page.show_delete_warning.connect((self.show_delete_warning))
+
+        self.add_account.add_account_success.connect(self.add_account_success)
+        self.add_account.show_add_account_warning.connect(self.show_add_account_warning)
+        self.add_account.close_add_account_page.connect(self.close_add_account_page)
+        self.add_account.id_duplicate_warning.connect(self.id_duplicate_warning)
+
+
+
     def show_login_page(self):
         self.login_page.cursor = self.cursor
         self.MainForm.close()
         self.login_page.setupUi(self.LoginForm)
-        self.login_page.switch_window_to_main.connect(self.show_main_page)
-        self.login_page.show_login_warning.connect(self.show_login_warning)
         self.LoginForm.show()
 
     def show_main_page(self):
         self.main_page.cursor = self.cursor
         self.main_page.AUTH = self.login_page.AUTH
+        self.main_page.loginID = self.login_page.loginID
         self.LoginForm.close()
         self.main_page.setupUi(self.MainForm)
-        self.main_page.show_logout_warning.connect(self.show_logout_message)
-        self.main_page.show_add_account_page.connect(self.show_add_account)
-        self.main_page.add_update.connect(self.main_page.add_list_update)
         self.MainForm.show()
 
     def show_add_account(self):
         self.add_account.cursor = self.cursor
+        self.add_account.loginAUTH = self.login_page.AUTH
         self.add_account.setupUi(self.AccountForm)
-        self.add_account.add_account_success.connect(self.add_account_success)
-        self.add_account.show_add_account_warning.connect(self.show_add_account_warning)
-        self.add_account.close_add_account_page.connect(self.close_add_account_page)
         self.AccountForm.show()
 
-    def add_account_success(self):
-        self.AccountForm.close()
-        self.main_page.NAME =self.add_account.NAME
-        self.main_page.add_update.emit()
 
-    def close_add_account_page(self):
-        self.AccountForm.close()
-
-    def show_login_warning(self):
+    def show_login_warning_alert(self):
         login_alert = QMessageBox()
         login_alert.setIcon(QMessageBox.Warning)
         login_alert.setText("로그인에 실패하였습니다.")
         login_alert.setWindowTitle("Warning")
         login_alert.setInformativeText('아이디 또는 비밀번호를 확인해주세요.')
-        login_alert.exec_()
+        login_alert.setStandardButtons(QMessageBox.Ok)
+        login_alert.setDefaultButton(QMessageBox.Ok)
+        result = login_alert.exec()
+        if result == QMessageBox.Ok:
+            login_alert.close()
 
     def show_add_account_warning(self):
-        login_alert = QMessageBox()
-        login_alert.setIcon(QMessageBox.Warning)
-        login_alert.setText("계정 추가에 실패하였습니다.")
-        login_alert.setWindowTitle("Warning")
-        login_alert.setInformativeText('빈칸을 확인해주세요')
-        login_alert.exec_()
+        self.account_alert = QMessageBox()
+        self.account_alert.setIcon(QMessageBox.Warning)
+        self.account_alert.setText("계정 추가에 실패하였습니다.")
+        self.account_alert.setWindowTitle("Warning")
+        self.account_alert.setInformativeText('빈칸을 확인해주세요')
+        self.account_alert.exec_()
+
+    def add_account_success(self):
+        self.AccountForm.close()
+        self.main_page.ID =self.add_account.ID
+        self.main_page.add_update.emit()
+
+    def close_add_account_page(self):
+        self.AccountForm.close()
+
+    def show_auth_warning(self):
+        self.auth_alert = QMessageBox()
+        self.auth_alert.setIcon(QMessageBox.Warning)
+        self.auth_alert.setText("계정 추가에 실패하였습니다.")
+        self.auth_alert.setWindowTitle("Warning")
+        self.auth_alert.setInformativeText('계정 추가 및 제거는 관리자만 가능합니다.')
+        self.auth_alert.exec_()
+
+    def show_auth_check(self):
+        self.auth_check = QMessageBox()
+        self.auth_check.setIcon(QMessageBox.Warning)
+        self.auth_check.setText("권한 제어에 실패하였습니다.")
+        self.auth_check.setWindowTitle("Warning")
+        self.auth_check.setInformativeText('권한을 확인해주세요')
+        self.auth_check.exec_()
+
+    def show_delete_warning(self):
+        self.delete_alert = QMessageBox()
+        self.delete_alert.setIcon(QMessageBox.Warning)
+        self.delete_alert.setText("계정 삭제에 실패하였습니다.")
+        self.delete_alert.setWindowTitle("Warning")
+        self.delete_alert.setInformativeText('현재 로그인중인 계정은 삭제할 수 없습니다.')
+        self.delete_alert.exec_()
+
+    def id_duplicate_warning(self):
+        self.duplicate_warning = QMessageBox()
+        self.duplicate_warning.setIcon(QMessageBox.Warning)
+        self.duplicate_warning.setText("계정 추가에 실패하였습니다.")
+        self.duplicate_warning.setWindowTitle("Warning")
+        self.duplicate_warning.setInformativeText('이미 존재하는 ID입니다.')
+        self.duplicate_warning.exec_()
 
     def show_logout_message(self):
         result=0
@@ -93,8 +141,11 @@ class UIHandler:
         logout_alert.setStandardButtons(QMessageBox.Ok | QMessageBox.Cancel)
         logout_alert.setDefaultButton(QMessageBox.Ok)
 
-        result = logout_alert.exec()
+        result = logout_alert.exec_()
         if result == QMessageBox.Ok:
+            logout_alert.close()
             self.show_login_page()
+        elif result == QMessageBox.Cancel:
+            logout_alert.close()
 
 
