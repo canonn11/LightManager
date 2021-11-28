@@ -1,6 +1,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
+from PySide2.QtCore import QTimer
 
 class Main_Page(QWidget):
     show_logout_warning = QtCore.pyqtSignal()
@@ -202,14 +203,14 @@ class Main_Page(QWidget):
 
         # page #1 white background label
         self.page1_white_background = QtWidgets.QLabel(self.page_1)
-        self.page1_white_background.setGeometry(QtCore.QRect(40, 140, 881, 471))
+        self.page1_white_background.setGeometry(QtCore.QRect(540, 160, 451, 451))
         self.page1_white_background.setStyleSheet("background-color: rgb(255, 255, 255);\n"
                                               "border-radius:12px;")
         self.page1_white_background.setObjectName("white_background")
 
         # page #1 light_list_label
         self.light_list_label = QtWidgets.QLabel(self.page_1)
-        self.light_list_label.setGeometry(QtCore.QRect(40, 75, 241, 51))
+        self.light_list_label.setGeometry(QtCore.QRect(550, 90, 241, 51))
         font = QtGui.QFont()
         font.setFamily("맑은 고딕")
         font.setPointSize(18)
@@ -220,7 +221,7 @@ class Main_Page(QWidget):
 
         # page #1 add_light_button
         self.add_light_button = QtWidgets.QPushButton(self.page_1)
-        self.add_light_button.setGeometry(QtCore.QRect(970, 140, 171, 61))
+        self.add_light_button.setGeometry(QtCore.QRect(1030, 160, 131, 51))
         font = QtGui.QFont()
         font.setFamily("맑은 고딕")
         font.setPointSize(12)
@@ -240,7 +241,7 @@ class Main_Page(QWidget):
 
         # page #1 delete_light_button
         self.delete_light_button = QtWidgets.QPushButton(self.page_1)
-        self.delete_light_button.setGeometry(QtCore.QRect(970, 220, 171, 61))
+        self.delete_light_button.setGeometry(QtCore.QRect(1030, 230, 131, 51))
         font = QtGui.QFont()
         font.setFamily("맑은 고딕")
         font.setPointSize(12)
@@ -258,7 +259,7 @@ class Main_Page(QWidget):
 
         # page #1 change_light_button
         self.change_light_button = QtWidgets.QPushButton(self.page_1)
-        self.change_light_button.setGeometry(QtCore.QRect(970, 300, 171, 61))
+        self.change_light_button.setGeometry(QtCore.QRect(1030, 300, 131, 51))
         font = QtGui.QFont()
         font.setFamily("맑은 고딕")
         font.setPointSize(12)
@@ -275,7 +276,7 @@ class Main_Page(QWidget):
 
         # page #1 listwidget _ light
         self.listWidget_light = QtWidgets.QListWidget(self.page_1)
-        self.listWidget_light.setGeometry(QtCore.QRect(50, 150, 861, 451))
+        self.listWidget_light.setGeometry(QtCore.QRect(545, 165, 441, 441))
         font = QtGui.QFont()
         font.setPointSize(14)
         font.setBold(True)
@@ -283,6 +284,10 @@ class Main_Page(QWidget):
         self.listWidget_light.setFont(font)
         self.listWidget_light.setStyleSheet("border-radius:1px;")
         self.listWidget_light.setObjectName("listWidget_light")
+        self.listWidget_light.itemSelectionChanged.connect(self.on_change_light)
+        self.timer = QTimer()
+        self.timer.start(1000)
+        self.timer.timeout.connect(self.on_change_light)
 
         self.cursor.execute("select * from light_list;")
         self.result = self.cursor.fetchall()
@@ -290,6 +295,101 @@ class Main_Page(QWidget):
         for i in range(0, self.light_number):
             item = self.listWidget_light.item(i)
             self.listWidget_light.addItem(QListWidgetItem(str(self.result[i][0])))
+
+        # page #1 light information text label
+        self.light_information_label = QtWidgets.QLabel(self.page_1)
+        self.light_information_label.setGeometry(QtCore.QRect(50, 90, 241, 51))
+        font = QtGui.QFont()
+        font.setFamily("맑은 고딕")
+        font.setPointSize(18)
+        font.setBold(False)
+        font.setWeight(50)
+        self.light_information_label.setFont(font)
+        self.light_information_label.setObjectName("light_information_label")
+
+        # page #1 background label
+        self.page1_white_background_2 = QtWidgets.QLabel(self.page_1)
+        self.page1_white_background_2.setGeometry(QtCore.QRect(40, 160, 451, 451))
+        self.page1_white_background_2.setStyleSheet("background-color: rgb(255, 255, 255);\n"
+                                                    "border-radius:12px;")
+        self.page1_white_background_2.setText("")
+        self.page1_white_background_2.setObjectName("page1_white_background_2")
+
+        # page #1 light id text label
+        self.light_id_label = QtWidgets.QLabel(self.page_1)
+        self.light_id_label.setGeometry(QtCore.QRect(70, 200, 131, 41))
+        font = QtGui.QFont()
+        font.setFamily("맑은 고딕")
+        font.setPointSize(16)
+        self.light_id_label.setFont(font)
+        self.light_id_label.setObjectName("light_id_label")
+
+        # page #1 light location text label
+        self.light_loc_label = QtWidgets.QLabel(self.page_1)
+        self.light_loc_label.setGeometry(QtCore.QRect(70, 300, 131, 41))
+        font = QtGui.QFont()
+        font.setFamily("맑은 고딕")
+        font.setPointSize(16)
+        self.light_loc_label.setFont(font)
+        self.light_loc_label.setObjectName("light_loc_label")
+
+        # page #1 light lux text label
+        self.light_lux_label = QtWidgets.QLabel(self.page_1)
+        self.light_lux_label.setGeometry(QtCore.QRect(70, 400, 131, 41))
+        font = QtGui.QFont()
+        font.setFamily("맑은 고딕")
+        font.setPointSize(16)
+        self.light_lux_label.setFont(font)
+        self.light_lux_label.setObjectName("light_lux_label")
+
+        # page #1 light status text label
+        self.light_status_label_2 = QtWidgets.QLabel(self.page_1)
+        self.light_status_label_2.setGeometry(QtCore.QRect(70, 500, 131, 41))
+        font = QtGui.QFont()
+        font.setFamily("맑은 고딕")
+        font.setPointSize(16)
+        self.light_status_label_2.setFont(font)
+        self.light_status_label_2.setObjectName("light_status_label_2")
+
+        # page #1 light id result label
+        self.light_id_result = QtWidgets.QLabel(self.page_1)
+        self.light_id_result.setGeometry(QtCore.QRect(220, 200, 251, 41))
+        font = QtGui.QFont()
+        font.setFamily("맑은 고딕")
+        font.setPointSize(16)
+        self.light_id_result.setFont(font)
+        self.light_id_result.setText("")
+        self.light_id_result.setObjectName("light_id_result")
+
+        # page #1 light location result label
+        self.light_loc_result = QtWidgets.QLabel(self.page_1)
+        self.light_loc_result.setGeometry(QtCore.QRect(220, 300, 251, 41))
+        font = QtGui.QFont()
+        font.setFamily("맑은 고딕")
+        font.setPointSize(16)
+        self.light_loc_result.setFont(font)
+        self.light_loc_result.setText("")
+        self.light_loc_result.setObjectName("light_loc_result")
+
+        # page #1 light lux result label
+        self.light_lux_result = QtWidgets.QLabel(self.page_1)
+        self.light_lux_result.setGeometry(QtCore.QRect(220, 400, 251, 41))
+        font = QtGui.QFont()
+        font.setFamily("맑은 고딕")
+        font.setPointSize(16)
+        self.light_lux_result.setFont(font)
+        self.light_lux_result.setText("")
+        self.light_lux_result.setObjectName("light_lux_result")
+
+        # page #1 light status result label
+        self.light_status_result = QtWidgets.QLabel(self.page_1)
+        self.light_status_result.setGeometry(QtCore.QRect(220, 500, 251, 41))
+        font = QtGui.QFont()
+        font.setFamily("맑은 고딕")
+        font.setPointSize(16)
+        self.light_status_result.setFont(font)
+        self.light_status_result.setText("")
+        self.light_status_result.setObjectName("light_status_result")
 
         #
         self.stackedWidget.addWidget(self.page_1)
@@ -554,12 +654,17 @@ class Main_Page(QWidget):
         self.light_status_label.setText(_translate("MainForm", "조명 관리"))
         self.light_control_label.setText(_translate("MainForm", "조명 제어"))
         self.account_label.setText(_translate("MainForm", "계정 관리"))
-        self.light_list_label.setText(_translate("Form", "조명 목록"))
-        self.add_light_button.setText(_translate("Form", "조명 추가"))
-        self.delete_light_button.setText(_translate("Form", "조명 삭제"))
-        self.change_light_button.setText(_translate("Form", "정보 변경"))
+        self.light_list_label.setText(_translate("MainForm", "조명 목록"))
+        self.add_light_button.setText(_translate("MainForm", "조명 추가"))
+        self.delete_light_button.setText(_translate("MainForm", "조명 삭제"))
+        self.change_light_button.setText(_translate("MainForm", "정보 변경"))
         __sortingEnabled = self.listWidget_light.isSortingEnabled()
         self.listWidget_light.setSortingEnabled(False)
+        self.light_information_label.setText(_translate("MainForm", "조명 정보"))
+        self.light_id_label.setText(_translate("MainForm", "ID"))
+        self.light_loc_label.setText(_translate("MainForm", "위치"))
+        self.light_lux_label.setText(_translate("MainForm", "조도"))
+        self.light_status_label_2.setText(_translate("MainForm", "상태"))
         __sortingEnabled = self.listWidget_account.isSortingEnabled()
         self.listWidget_account.setSortingEnabled(False)
         self.listWidget_account.setSortingEnabled(__sortingEnabled)
@@ -622,6 +727,33 @@ class Main_Page(QWidget):
                 query = "call delete_light("+str(value)+");"
                 self.cursor.execute(query)
                 self.listWidget_light.takeItem(row)
+
+    def on_change_light(self):
+        row = self.listWidget_light.currentRow()
+        if(row == -1):
+            pass
+        else:
+            value = self.listWidget_light.currentItem().text()
+            self.light_id_result.setText(value)
+            query = "select light_loc from light_list where light_id = " + value + ";"
+            self.cursor.execute(query)
+            result = self.cursor.fetchall()
+            self.light_loc_result.setText(result[0][0])
+            query = "select light_lux from light_status where light_list_id = " + value + ";"
+            self.cursor.execute(query)
+            result = self.cursor.fetchall()
+            self.light_lux_result.setText(str(result[0][0]))
+            procedure = "call take_light_status(" + value + ");"
+            self.cursor.execute(procedure)
+            result = self.cursor.fetchall()
+            if (result[0][0] == "change"):
+                self.light_status_result.setText("교체 필요")
+            elif (result[0][0] == 'old'):
+                self.light_status_result.setText("노후화됨")
+            else:
+                self.light_status_result.setText("정상")
+
+
 
 
     def on_change_account(self):
