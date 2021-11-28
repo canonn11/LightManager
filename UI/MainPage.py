@@ -173,6 +173,246 @@ class Main_Page(QWidget):
                                       "}")
         self.page0_refresh_button.setObjectName("page0_refresh_button")
 
+        # page #0 white background
+        self.page0_white_background_2 = QtWidgets.QLabel(self.page_0)
+        self.page0_white_background_2.setGeometry(QtCore.QRect(630, 90, 551, 261))
+        self.page0_white_background_2.setStyleSheet("background-color:rgb(255,255,255);\n"
+                                                    "border-radius : 12px;")
+        self.page0_white_background_2.setText("")
+        self.page0_white_background_2.setObjectName("page0_white_background_2")
+
+        # page #0 white background
+        self.page0_white_background_3 = QtWidgets.QLabel(self.page_0)
+        self.page0_white_background_3.setGeometry(QtCore.QRect(630, 370, 551, 261))
+        self.page0_white_background_3.setStyleSheet("background-color:rgb(255,255,255);\n"
+                                                    "border-radius : 12px;")
+        self.page0_white_background_3.setText("")
+        self.page0_white_background_3.setObjectName("page0_white_background_3")
+
+        # page #0 white background
+        self.page0_white_background_1 = QtWidgets.QLabel(self.page_0)
+        self.page0_white_background_1.setGeometry(QtCore.QRect(20, 90, 571, 541))
+        self.page0_white_background_1.setStyleSheet("background-color:rgb(255,255,255);\n"
+                                                    "border-radius : 12px;")
+        self.page0_white_background_1.setText("")
+        self.page0_white_background_1.setObjectName("page0_white_background_1")
+
+        # page #0 light status text label
+        self.light_status_text = QtWidgets.QLabel(self.page_0)
+        self.light_status_text.setGeometry(QtCore.QRect(650, 105, 121, 31))
+        font = QtGui.QFont()
+        font.setFamily("맑은 고딕")
+        font.setPointSize(14)
+        font.setBold(False)
+        font.setWeight(50)
+        self.light_status_text.setFont(font)
+        self.light_status_text.setStyleSheet("font-color:rgb(157, 157, 157);")
+        self.light_status_text.setObjectName("light_status_text")
+
+        # page #0 light on image
+        self.light_status_on_img = QtWidgets.QLabel(self.page_0)
+        self.light_status_on_img.setGeometry(QtCore.QRect(730, 160, 111, 111))
+        self.light_status_on_img.setPixmap(QtGui.QPixmap("UI/imgsource/bulb-on.png"))
+        self.light_status_on_img.setScaledContents(True)
+        self.light_status_on_img.setObjectName("light_status_on_img")
+
+        # page #0 light off image
+        self.light_status_off_img = QtWidgets.QLabel(self.page_0)
+        self.light_status_off_img.setGeometry(QtCore.QRect(970, 153, 111, 111))
+        self.light_status_off_img.setPixmap(QtGui.QPixmap("UI/imgsource/bulb-off.png"))
+        self.light_status_off_img.setScaledContents(True)
+        self.light_status_off_img.setObjectName("light_status_off_img")
+
+        # page #0 light on text label
+        self.light_status_on = QtWidgets.QLabel(self.page_0)
+        self.light_status_on.setGeometry(QtCore.QRect(730, 290, 71, 41))
+        font = QtGui.QFont()
+        font.setFamily("맑은 고딕")
+        font.setPointSize(12)
+        font.setBold(True)
+        font.setWeight(75)
+        self.light_status_on.setFont(font)
+        self.light_status_on.setObjectName("light_status_on")
+
+        # page #0 light off text label
+        self.light_status_off = QtWidgets.QLabel(self.page_0)
+        self.light_status_off.setGeometry(QtCore.QRect(970, 290, 71, 41))
+        font = QtGui.QFont()
+        font.setFamily("맑은 고딕")
+        font.setPointSize(12)
+        font.setBold(True)
+        font.setWeight(75)
+        self.light_status_off.setFont(font)
+        self.light_status_off.setObjectName("light_status_off")
+
+        # page #0 light status separator
+        self.light_status_separator = QtWidgets.QLabel(self.page_0)
+        self.light_status_separator.setGeometry(QtCore.QRect(900, 150, 2, 160))
+        self.light_status_separator.setStyleSheet("background-color: rgb(188, 188, 188);")
+        self.light_status_separator.setText("")
+        self.light_status_separator.setObjectName("light_status_separator")
+
+        # page #0 light on result label
+        self.light_status_on_result = QtWidgets.QLabel(self.page_0)
+        self.light_status_on_result.setGeometry(QtCore.QRect(800, 290, 71, 41))
+        font = QtGui.QFont()
+        font.setFamily("맑은 고딕")
+        font.setPointSize(12)
+        font.setBold(True)
+        font.setWeight(75)
+        self.light_status_on_result.setFont(font)
+        self.light_status_on_result.setObjectName("light_status_on_result")
+
+        self.cursor.execute("select count(*) from light_setting where light_onoff = 'on';")
+        self.result = self.cursor.fetchall()
+        self.light_status_on_result.setText(str(self.result[0][0]))
+
+        # page #0 light off result label
+        self.light_status_off_result = QtWidgets.QLabel(self.page_0)
+        self.light_status_off_result.setGeometry(QtCore.QRect(1040, 290, 71, 41))
+        font = QtGui.QFont()
+        font.setFamily("맑은 고딕")
+        font.setPointSize(12)
+        font.setBold(True)
+        font.setWeight(75)
+        self.light_status_off_result.setFont(font)
+        self.light_status_off_result.setObjectName("light_status_off_result")
+
+        self.cursor.execute("select count(*) from light_setting where light_onoff = 'off';")
+        self.result = self.cursor.fetchall()
+        self.light_status_off_result.setText(str(self.result[0][0]))
+
+        # page #0 anomaly detection text label
+        self.anomaly_detection_text = QtWidgets.QLabel(self.page_0)
+        self.anomaly_detection_text.setGeometry(QtCore.QRect(650, 385, 121, 31))
+        font = QtGui.QFont()
+        font.setFamily("맑은 고딕")
+        font.setPointSize(14)
+        font.setBold(False)
+        font.setWeight(50)
+        self.anomaly_detection_text.setFont(font)
+        self.anomaly_detection_text.setStyleSheet("font-color:rgb(157, 157, 157);")
+        self.anomaly_detection_text.setObjectName("anomaly_detection_text")
+
+        # page #0 anomaly detection normal image label
+        self.normal_img = QtWidgets.QLabel(self.page_0)
+        self.normal_img.setGeometry(QtCore.QRect(680, 440, 99, 99))
+        self.normal_img.setText("")
+        self.normal_img.setPixmap(QtGui.QPixmap("UI/imgsource/bulb-normal.png"))
+        self.normal_img.setScaledContents(True)
+        self.normal_img.setObjectName("normal_img")
+
+        # page #0 anomaly detection old image label
+        self.old_img = QtWidgets.QLabel(self.page_0)
+        self.old_img.setGeometry(QtCore.QRect(850, 440, 99, 99))
+        self.old_img.setText("")
+        self.old_img.setPixmap(QtGui.QPixmap("UI/imgsource/bulb-old.png"))
+        self.old_img.setScaledContents(True)
+        self.old_img.setObjectName("old_img")
+
+        # page #0 anomaly detection change image label
+        self.change_img = QtWidgets.QLabel(self.page_0)
+        self.change_img.setGeometry(QtCore.QRect(1030, 440, 99, 99))
+        self.change_img.setText("")
+        self.change_img.setPixmap(QtGui.QPixmap("UI/imgsource/bulb-change.png"))
+        self.change_img.setScaledContents(True)
+        self.change_img.setObjectName("change_img")
+
+        # page #0 anomaly detection normal text label
+        self.anomaly_detection_normal = QtWidgets.QLabel(self.page_0)
+        self.anomaly_detection_normal.setGeometry(QtCore.QRect(680, 560, 71, 41))
+        font = QtGui.QFont()
+        font.setFamily("맑은 고딕")
+        font.setPointSize(12)
+        font.setBold(True)
+        font.setWeight(75)
+        self.anomaly_detection_normal.setFont(font)
+        self.anomaly_detection_normal.setObjectName("anomaly_detection_normal")
+
+        # page #0 anomaly detection old text label
+        self.anomaly_detection_old = QtWidgets.QLabel(self.page_0)
+        self.anomaly_detection_old.setGeometry(QtCore.QRect(850, 560, 81, 41))
+        font = QtGui.QFont()
+        font.setFamily("맑은 고딕")
+        font.setPointSize(12)
+        font.setBold(True)
+        font.setWeight(75)
+        self.anomaly_detection_old.setFont(font)
+        self.anomaly_detection_old.setObjectName("anomaly_detection_old")
+
+        # page #0 anomaly detection change text label
+        self.anomaly_detection_change = QtWidgets.QLabel(self.page_0)
+        self.anomaly_detection_change.setGeometry(QtCore.QRect(1020, 560, 101, 41))
+        font = QtGui.QFont()
+        font.setFamily("맑은 고딕")
+        font.setPointSize(12)
+        font.setBold(True)
+        font.setWeight(75)
+        self.anomaly_detection_change.setFont(font)
+        self.anomaly_detection_change.setObjectName("anomaly_detection_change")
+
+        # page #0 anomaly detection separator 1
+        self.anomaly_detection_separator_1 = QtWidgets.QLabel(self.page_0)
+        self.anomaly_detection_separator_1.setGeometry(QtCore.QRect(810, 430, 2, 160))
+        self.anomaly_detection_separator_1.setStyleSheet("background-color: rgb(188, 188, 188);")
+        self.anomaly_detection_separator_1.setText("")
+        self.anomaly_detection_separator_1.setObjectName("anomaly_detection_separator_1")
+
+        # page #0 anomaly detection separator 2
+        self.anomaly_detection_separator_2 = QtWidgets.QLabel(self.page_0)
+        self.anomaly_detection_separator_2.setGeometry(QtCore.QRect(990, 430, 2, 160))
+        self.anomaly_detection_separator_2.setStyleSheet("background-color: rgb(188, 188, 188);")
+        self.anomaly_detection_separator_2.setText("")
+        self.anomaly_detection_separator_2.setObjectName("anomaly_detection_separator_2")
+
+        # page #0 anomaly detecton normal result label
+        self.anomaly_detection_normal_result = QtWidgets.QLabel(self.page_0)
+        self.anomaly_detection_normal_result.setGeometry(QtCore.QRect(740, 560, 71, 41))
+        font = QtGui.QFont()
+        font.setFamily("맑은 고딕")
+        font.setPointSize(12)
+        font.setBold(True)
+        font.setWeight(75)
+        self.anomaly_detection_normal_result.setFont(font)
+        self.anomaly_detection_normal_result.setText("")
+        self.anomaly_detection_normal_result.setObjectName("anomaly_detection_normal_result")
+
+        self.cursor.execute("select count(*) from light_status where light_stat = 'normal';")
+        self.result = self.cursor.fetchall()
+        self.anomaly_detection_normal_result.setText(str(self.result[0][0]))
+
+        # page #0 anomaly detection old result label
+        self.anomaly_detection_old_result = QtWidgets.QLabel(self.page_0)
+        self.anomaly_detection_old_result.setGeometry(QtCore.QRect(930, 560, 71, 41))
+        font = QtGui.QFont()
+        font.setFamily("맑은 고딕")
+        font.setPointSize(12)
+        font.setBold(True)
+        font.setWeight(75)
+        self.anomaly_detection_old_result.setFont(font)
+        self.anomaly_detection_old_result.setText("")
+        self.anomaly_detection_old_result.setObjectName("anomaly_detection_old_result")
+
+        self.cursor.execute("select count(*) from light_status where light_stat = 'old';")
+        self.result = self.cursor.fetchall()
+        self.anomaly_detection_old_result.setText(str(self.result[0][0]))
+
+        # page #0 anomaly detection change result label
+        self.anomaly_detection_change_result = QtWidgets.QLabel(self.page_0)
+        self.anomaly_detection_change_result.setGeometry(QtCore.QRect(1130, 560, 71, 41))
+        font = QtGui.QFont()
+        font.setFamily("맑은 고딕")
+        font.setPointSize(12)
+        font.setBold(True)
+        font.setWeight(75)
+        self.anomaly_detection_change_result.setFont(font)
+        self.anomaly_detection_change_result.setText("")
+        self.anomaly_detection_change_result.setObjectName("anomaly_detection_change_result")
+
+        self.cursor.execute("select count(*) from light_status where light_stat = 'change';")
+        self.result = self.cursor.fetchall()
+        self.anomaly_detection_change_result.setText(str(self.result[0][0]))
+
         #
         self.stackedWidget.addWidget(self.page_0)
 
@@ -224,6 +464,7 @@ class Main_Page(QWidget):
         self.add_light_button.setGeometry(QtCore.QRect(1030, 160, 131, 51))
         font = QtGui.QFont()
         font.setFamily("맑은 고딕")
+        font.setBold(True)
         font.setPointSize(12)
         self.add_light_button.setFont(font)
         self.add_light_button.setStyleSheet("QPushButton{\n"
@@ -244,6 +485,7 @@ class Main_Page(QWidget):
         self.delete_light_button.setGeometry(QtCore.QRect(1030, 230, 131, 51))
         font = QtGui.QFont()
         font.setFamily("맑은 고딕")
+        font.setBold(True)
         font.setPointSize(12)
         self.delete_light_button.setFont(font)
         self.delete_light_button.setStyleSheet("QPushButton{\n"
@@ -262,6 +504,7 @@ class Main_Page(QWidget):
         self.change_light_button.setGeometry(QtCore.QRect(1030, 300, 131, 51))
         font = QtGui.QFont()
         font.setFamily("맑은 고딕")
+        font.setBold(True)
         font.setPointSize(12)
         self.change_light_button.setFont(font)
         self.change_light_button.setStyleSheet("QPushButton{\n"
@@ -513,6 +756,7 @@ class Main_Page(QWidget):
         self.add_account_button.setGeometry(QtCore.QRect(1030, 160, 131, 51))
         font = QtGui.QFont()
         font.setFamily("맑은 고딕")
+        font.setBold(True)
         font.setPointSize(12)
         self.add_account_button.setFont(font)
         self.add_account_button.setStyleSheet("QPushButton{\n"
@@ -531,6 +775,7 @@ class Main_Page(QWidget):
         self.delete_account_button.setGeometry(QtCore.QRect(1030, 230, 131, 51))
         font = QtGui.QFont()
         font.setFamily("맑은 고딕")
+        font.setBold(True)
         font.setPointSize(12)
         self.delete_account_button.setFont(font)
         self.delete_account_button.setStyleSheet("QPushButton{\n"
@@ -549,6 +794,7 @@ class Main_Page(QWidget):
         self.auth_control_button.setGeometry(QtCore.QRect(1030, 300, 131, 51))
         font = QtGui.QFont()
         font.setFamily("맑은 고딕")
+        font.setBold(True)
         font.setPointSize(12)
         self.auth_control_button.setFont(font)
         self.auth_control_button.setStyleSheet("QPushButton{\n"
@@ -640,7 +886,6 @@ class Main_Page(QWidget):
 
         #
         self.stackedWidget.addWidget(self.page_3)
-
         self.retranslateUi(MainForm)
         self.stackedWidget.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(MainForm)
@@ -651,6 +896,13 @@ class Main_Page(QWidget):
         MainForm.setWindowIcon(QIcon("UI/imgsource/lightbulb.png"))
         self.LightManager.setText(_translate("MainForm", "Light Manager"))
         self.system_overview_label.setText(_translate("MainForm", "시스템 현황"))
+        self.light_status_text.setText(_translate("MainForm", "조명 상태"))
+        self.light_status_on.setText(_translate("MainForm", "켜짐 : "))
+        self.light_status_off.setText(_translate("MainForm", "꺼짐 : "))
+        self.anomaly_detection_text.setText(_translate("MainForm", "이상 감지"))
+        self.anomaly_detection_normal.setText(_translate("MainForm", "정상 : "))
+        self.anomaly_detection_old.setText(_translate("MainForm", "노후화 :"))
+        self.anomaly_detection_change.setText(_translate("MainForm", "교체 필요 :"))
         self.light_status_label.setText(_translate("MainForm", "조명 관리"))
         self.light_control_label.setText(_translate("MainForm", "조명 제어"))
         self.account_label.setText(_translate("MainForm", "계정 관리"))

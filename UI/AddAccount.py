@@ -93,6 +93,11 @@ class Add_Account(QWidget):
         #pushbutton for OK
         self.ok_button = QtWidgets.QPushButton(AccountForm)
         self.ok_button.setGeometry(QtCore.QRect(110, 410, 111, 41))
+        font = QtGui.QFont()
+        font.setFamily("맑은 고딕")
+        font.setBold(True)
+        font.setPointSize(12)
+        self.ok_button.setFont(font)
         self.ok_button.setStyleSheet("QPushButton{\n"
                                               "background-color: rgb(53, 174, 255);\n"
                                               "border-radius:12px;\n"
@@ -107,6 +112,11 @@ class Add_Account(QWidget):
         #pushbutton for Cancel
         self.cancel_button = QtWidgets.QPushButton(AccountForm)
         self.cancel_button.setGeometry(QtCore.QRect(250, 410, 111, 41))
+        font = QtGui.QFont()
+        font.setFamily("맑은 고딕")
+        font.setBold(True)
+        font.setPointSize(12)
+        self.cancel_button.setFont(font)
         self.cancel_button.setStyleSheet("QPushButton{\n"
                                      "background-color: rgb(153, 153, 153);\n"
                                      "border-radius:12px;\n"
