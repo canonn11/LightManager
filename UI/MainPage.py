@@ -5,16 +5,24 @@ from PyQt5.QtGui import *
 class Main_Page(QWidget):
     show_logout_warning = QtCore.pyqtSignal()
     show_add_account_page = QtCore.pyqtSignal()
-    show_auth_warning = QtCore.pyqtSignal()
+    show_auth_warning_account = QtCore.pyqtSignal()
+    show_auth_warning_light = QtCore.pyqtSignal()
     show_auth_check = QtCore.pyqtSignal()
-    show_delete_warning = QtCore.pyqtSignal()
+    show_account_delete_warning = QtCore.pyqtSignal()
+    show_add_light_page = QtCore.pyqtSignal()
     add_update = QtCore.pyqtSignal()
+    add_update_light = QtCore.pyqtSignal()
     account_number = 0
+    light_number = 0
 
     def setupUi(self, MainForm):
         self.cursor.execute("select count(*) from id_table;")
         self.result = self.cursor.fetchone()
         self.account_number = self.result[0]
+
+        self.cursor.execute("select count(*) from light_list;")
+        self.result = self.cursor.fetchone()
+        self.light_number = self.result[0]
 
         MainForm.setObjectName("MainForm")
         MainForm.resize(1280, 720)
@@ -64,30 +72,30 @@ class Main_Page(QWidget):
         self.MainButton.setObjectName("MainButton")
         self.MainButton.clicked.connect(self.switch_layout_0)
 
-        # Left side Pushbutton #2 -> LightControl Button
+        # Left side Pushbutton #2 -> Light Management Button
         self.LightButton = QtWidgets.QPushButton(MainForm)
         self.LightButton.setGeometry(QtCore.QRect(6, 80, 51, 51))
         self.LightButton.setStyleSheet("QPushButton{\n"
                                        "background-color: rgba(255, 255, 255, 0);\n"
-                                       "border-image:url(UI/imgsource/folder1.png);\n"
+                                       "border-image:url(UI/imgsource/bulb1.png);\n"
                                        "}\n"
                                        "QPushButton:hover{\n"
                                        "background-color: rgba(255, 255, 255, 0);\n"
-                                       "border-image:url(UI/imgsource/folder2.png);\n"
+                                       "border-image:url(UI/imgsource/bulb2.png);\n"
                                        "}")
         self.LightButton.setObjectName("LightButton")
         self.LightButton.clicked.connect(self.switch_layout_1)
 
-        # Left side Pushbutton #3 -> LightManagement Button
+        # Left side Pushbutton #3 -> LightControl Button
         self.LightControlButton = QtWidgets.QPushButton(MainForm)
         self.LightControlButton.setGeometry(QtCore.QRect(6, 150, 51, 51))
         self.LightControlButton.setStyleSheet("QPushButton{\n"
                                                       "background-color: rgba(255, 255, 255, 0);\n"
-                                                      "border-image:url(UI/imgsource/bulb1.png);\n"
+                                                      "border-image:url(UI/imgsource/folder1.png);\n"
                                                       "}\n"
                                                       "QPushButton:hover{\n"
                                                       "background-color: rgba(255, 255, 255, 0);\n"
-                                                      "border-image:url(UI/imgsource/bulb2.png);\n"
+                                                      "border-image:url(UI/imgsource/folder2.png);\n"
                                                       "}")
         self.LightControlButton.setObjectName("LightControlButton")
         self.LightControlButton.clicked.connect(self.switch_layout_2)
@@ -192,6 +200,97 @@ class Main_Page(QWidget):
         self.light_status_label.setFont(font)
         self.light_status_label.setObjectName("light_status_label")
 
+        # page #1 white background label
+        self.page1_white_background = QtWidgets.QLabel(self.page_1)
+        self.page1_white_background.setGeometry(QtCore.QRect(40, 140, 881, 471))
+        self.page1_white_background.setStyleSheet("background-color: rgb(255, 255, 255);\n"
+                                              "border-radius:12px;")
+        self.page1_white_background.setObjectName("white_background")
+
+        # page #1 light_list_label
+        self.light_list_label = QtWidgets.QLabel(self.page_1)
+        self.light_list_label.setGeometry(QtCore.QRect(40, 75, 241, 51))
+        font = QtGui.QFont()
+        font.setFamily("맑은 고딕")
+        font.setPointSize(18)
+        font.setBold(False)
+        font.setWeight(50)
+        self.light_list_label.setFont(font)
+        self.light_list_label.setObjectName("light_list_label")
+
+        # page #1 add_light_button
+        self.add_light_button = QtWidgets.QPushButton(self.page_1)
+        self.add_light_button.setGeometry(QtCore.QRect(970, 140, 171, 61))
+        font = QtGui.QFont()
+        font.setFamily("맑은 고딕")
+        font.setPointSize(12)
+        self.add_light_button.setFont(font)
+        self.add_light_button.setStyleSheet("QPushButton{\n"
+                                              "background-color: rgb(53, 174, 255);\n"
+                                              "border-radius:12px;\n"
+                                              "}\n"
+                                              "QPushButton:hover{\n"
+                                              "background-color: rgb(153, 153, 153);\n"
+                                              "border-radius:12px;\n"
+                                              "}")
+        self.add_light_button.setObjectName("add_light_button")
+        self.add_light_button.clicked.connect(self.add_light_page)
+
+
+
+        # page #1 delete_light_button
+        self.delete_light_button = QtWidgets.QPushButton(self.page_1)
+        self.delete_light_button.setGeometry(QtCore.QRect(970, 220, 171, 61))
+        font = QtGui.QFont()
+        font.setFamily("맑은 고딕")
+        font.setPointSize(12)
+        self.delete_light_button.setFont(font)
+        self.delete_light_button.setStyleSheet("QPushButton{\n"
+                                                 "background-color: rgb(255, 126, 128);\n"
+                                                 "border-radius:12px;\n"
+                                                 "}\n"
+                                                 "QPushButton:hover{\n"
+                                                 "background-color: rgb(153, 153, 153);\n"
+                                                 "border-radius:12px;\n"
+                                                 "}")
+        self.delete_light_button.setObjectName("delete_light_button")
+        self.delete_light_button.clicked.connect(self.delete_light)
+
+        # page #1 change_light_button
+        self.change_light_button = QtWidgets.QPushButton(self.page_1)
+        self.change_light_button.setGeometry(QtCore.QRect(970, 300, 171, 61))
+        font = QtGui.QFont()
+        font.setFamily("맑은 고딕")
+        font.setPointSize(12)
+        self.change_light_button.setFont(font)
+        self.change_light_button.setStyleSheet("QPushButton{\n"
+                                               "background-color: rgb(255, 237, 32);\n"
+                                               "border-radius:12px;\n"
+                                               "}\n"
+                                               "QPushButton:hover{\n"
+                                               "background-color: rgb(153, 153, 153);\n"
+                                               "border-radius:12px;\n"
+                                               "}")
+        self.change_light_button.setObjectName("change_light_button")
+
+        # page #1 listwidget _ light
+        self.listWidget_light = QtWidgets.QListWidget(self.page_1)
+        self.listWidget_light.setGeometry(QtCore.QRect(50, 150, 861, 451))
+        font = QtGui.QFont()
+        font.setPointSize(14)
+        font.setBold(True)
+        font.setWeight(75)
+        self.listWidget_light.setFont(font)
+        self.listWidget_light.setStyleSheet("border-radius:1px;")
+        self.listWidget_light.setObjectName("listWidget_light")
+
+        self.cursor.execute("select * from light_list;")
+        self.result = self.cursor.fetchall()
+
+        for i in range(0, self.light_number):
+            item = self.listWidget_light.item(i)
+            self.listWidget_light.addItem(QListWidgetItem(str(self.result[i][0])))
+
         #
         self.stackedWidget.addWidget(self.page_1)
 
@@ -266,26 +365,26 @@ class Main_Page(QWidget):
         self.white_background_2.setObjectName("white_background_2")
 
         # page #3 account listwidget
-        self.listWidget = QtWidgets.QListWidget(self.page_3)
-        self.listWidget.setGeometry(QtCore.QRect(545, 165, 441, 441))
+        self.listWidget_account = QtWidgets.QListWidget(self.page_3)
+        self.listWidget_account.setGeometry(QtCore.QRect(545, 165, 441, 441))
         font = QtGui.QFont()
         font.setPointSize(12)
-        self.listWidget.setFont(font)
-        self.listWidget.setStyleSheet("border-radius:1px;")
-        self.listWidget.setObjectName("listWidget")
+        self.listWidget_account.setFont(font)
+        self.listWidget_account.setStyleSheet("border-radius:1px;")
+        self.listWidget_account.setObjectName("listWidget_account")
         item = QtWidgets.QListWidgetItem()
         font = QtGui.QFont()
         font.setFamily("맑은 고딕")
         font.setPointSize(12)
         item.setFont(font)
-        self.listWidget.itemSelectionChanged.connect(self.on_change)
+        self.listWidget_account.itemSelectionChanged.connect(self.on_change_account)
 
         self.cursor.execute("select * from id_table;")
         self.result = self.cursor.fetchall()
 
         for i in range(0, self.account_number):
-            item = self.listWidget.item(i)
-            self.listWidget.addItem(QListWidgetItem(self.result[i][0]))
+            item = self.listWidget_account.item(i)
+            self.listWidget_account.addItem(QListWidgetItem(self.result[i][0]))
 
         # page #3 all acount text label
         self.all_account_label = QtWidgets.QLabel(self.page_3)
@@ -452,12 +551,18 @@ class Main_Page(QWidget):
         MainForm.setWindowIcon(QIcon("UI/imgsource/lightbulb.png"))
         self.LightManager.setText(_translate("MainForm", "Light Manager"))
         self.system_overview_label.setText(_translate("MainForm", "시스템 현황"))
-        self.light_status_label.setText(_translate("MainForm", "조명 상태"))
+        self.light_status_label.setText(_translate("MainForm", "조명 관리"))
         self.light_control_label.setText(_translate("MainForm", "조명 제어"))
         self.account_label.setText(_translate("MainForm", "계정 관리"))
-        __sortingEnabled = self.listWidget.isSortingEnabled()
-        self.listWidget.setSortingEnabled(False)
-        self.listWidget.setSortingEnabled(__sortingEnabled)
+        self.light_list_label.setText(_translate("Form", "조명 목록"))
+        self.add_light_button.setText(_translate("Form", "조명 추가"))
+        self.delete_light_button.setText(_translate("Form", "조명 삭제"))
+        self.change_light_button.setText(_translate("Form", "정보 변경"))
+        __sortingEnabled = self.listWidget_light.isSortingEnabled()
+        self.listWidget_light.setSortingEnabled(False)
+        __sortingEnabled = self.listWidget_account.isSortingEnabled()
+        self.listWidget_account.setSortingEnabled(False)
+        self.listWidget_account.setSortingEnabled(__sortingEnabled)
         self.all_account_label.setText(_translate("MainForm", "전체 계정"))
         self.account_info_label.setText(_translate("MainForm", "계정 정보"))
         self.add_account_button.setText(_translate("MainForm", "계정 추가"))
@@ -468,11 +573,17 @@ class Main_Page(QWidget):
         self.loc_label.setText(_translate("MainForm", "위치"))
         self.auth_label.setText(_translate("MainForm", "권한"))
 
+    def add_light_page(self):
+        if(self.AUTH == 1):
+            self.show_add_light_page.emit()
+        else:
+            self.show_auth_warning_light.emit()
+
     def add_account_page(self):
         if(self.AUTH == 1):
             self.show_add_account_page.emit()
         else:
-            self.show_auth_warning.emit()
+            self.show_auth_warning_account.emit()
 
     def switch_layout_0(self):
         self.stackedWidget.setCurrentIndex(0)
@@ -489,13 +600,32 @@ class Main_Page(QWidget):
     def logout_main_page(self):
         self.show_logout_warning.emit()
 
-    def add_list_update(self):
-        self.listWidget.addItem(QListWidgetItem(self.ID))
+    def add_list_update_account(self):
+        self.listWidget_account.addItem(QListWidgetItem(self.ID))
         self.stackedWidget.setCurrentIndex(0)
         self.stackedWidget.setCurrentIndex(3)
 
-    def on_change(self):
-        value = self.listWidget.currentItem().text()
+    def add_list_update_light(self):
+        self.listWidget_light.addItem(QListWidgetItem(str(self.lightID)))
+        self.stackedWidget.setCurrentIndex(0)
+        self.stackedWidget.setCurrentIndex(1)
+
+    def delete_light(self):
+        value = self.listWidget_light.currentItem().text()
+        row = self.listWidget_light.currentRow()
+        if(row==-1):
+            pass
+        else:
+            if(self.AUTH == 0):
+                self.show_auth_warning_light.emit()
+            else:
+                query = "call delete_light("+str(value)+");"
+                self.cursor.execute(query)
+                self.listWidget_light.takeItem(row)
+
+
+    def on_change_account(self):
+        value = self.listWidget_account.currentItem().text()
         query = "select * from id_table where user_id ='"+value+"';"
         self.cursor.execute(query)
         result = self.cursor.fetchall()
@@ -508,22 +638,22 @@ class Main_Page(QWidget):
             self.auth_result.setText("유저")
 
     def delete_account(self):
-        value = self.listWidget.currentItem().text()
-        row = self.listWidget.currentRow()
+        value = self.listWidget_account.currentItem().text()
+        row = self.listWidget_account.currentRow()
         if(row==-1):
             pass
         else:
             if(self.AUTH == 0):
-                self.show_auth_warning.emit()
+                self.show_auth_warning_account.emit()
             elif(self.loginID == value):
-                self.show_delete_warning.emit()
+                self.show_account_delete_warning.emit()
             else:
                 query = "delete from id_table where user_id = '"+value+"';"
                 self.cursor.execute(query)
-                self.listWidget.takeItem(row)
+                self.listWidget_account.takeItem(row)
 
     def auth_control(self):
-        value = self.listWidget.currentItem().text()
+        value = self.listWidget_account.currentItem().text()
         query = "select * from id_table where user_id ='"+value+"';"
         self.cursor.execute(query)
         result = self.cursor.fetchall()

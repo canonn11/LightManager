@@ -1,6 +1,7 @@
 from UI.LoginPage import Login_Page
 from UI.MainPage import Main_Page
 from UI.AddAccount import Add_Account
+from UI.AddLight import Add_Light
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
@@ -29,25 +30,36 @@ class UIHandler:
         self.login_page = Login_Page()
         self.main_page = Main_Page()
         self.add_account = Add_Account()
+        self.add_light = Add_Light()
 
         self.LoginForm = QtWidgets.QWidget()
         self.MainForm = QtWidgets.QWidget()
         self.AccountForm = QtWidgets.QWidget()
+        self.LightForm = QtWidgets.QWidget()
 
         self.login_page.switch_window_to_main.connect(self.show_main_page)
         self.login_page.show_login_warning.connect(self.show_login_warning_alert)
 
         self.main_page.show_logout_warning.connect(self.show_logout_message)
         self.main_page.show_add_account_page.connect(self.show_add_account)
-        self.main_page.add_update.connect(self.main_page.add_list_update)
-        self.main_page.show_auth_warning.connect((self.show_auth_warning))
+        self.main_page.add_update.connect(self.main_page.add_list_update_account)
+        self.main_page.show_auth_warning_account.connect((self.show_auth_warning_account))
+        self.main_page.show_auth_warning_light.connect((self.show_auth_warning_light))
         self.main_page.show_auth_check.connect((self.show_auth_check))
-        self.main_page.show_delete_warning.connect((self.show_delete_warning))
+        self.main_page.show_account_delete_warning.connect((self.show_account_delete_warning))
+        self.main_page.show_add_light_page.connect(self.show_add_light)
+        self.main_page.add_update_light.connect(self.main_page.add_list_update_light)
 
         self.add_account.add_account_success.connect(self.add_account_success)
         self.add_account.show_add_account_warning.connect(self.show_add_account_warning)
         self.add_account.close_add_account_page.connect(self.close_add_account_page)
         self.add_account.id_duplicate_warning.connect(self.id_duplicate_warning)
+
+        self.add_light.light_duplicate_warning.connect(self.light_duplicate_warning)
+        self.add_light.show_add_light_warning.connect(self.show_add_light_blank_warning)
+        self.add_light.add_light_success.connect(self.add_light_success)
+        self.add_light.close_add_light_page.connect(self.close_add_light_page)
+
 
 
 
@@ -71,6 +83,12 @@ class UIHandler:
         self.add_account.setupUi(self.AccountForm)
         self.AccountForm.show()
 
+    def show_add_light(self):
+        self.add_light.cursor = self.cursor
+        self.add_light.loginAUTH = self.login_page.AUTH
+        self.add_light.setupUi(self.LightForm)
+        self.LightForm.show()
+
 
     def show_login_warning_alert(self):
         login_alert = QMessageBox()
@@ -92,20 +110,46 @@ class UIHandler:
         self.account_alert.setInformativeText('빈칸을 확인해주세요')
         self.account_alert.exec_()
 
+    def show_add_light_blank_warning(self):
+        self.light_alert = QMessageBox()
+        self.light_alert.setIcon(QMessageBox.Warning)
+        self.light_alert.setText("조명 추가에 실패하였습니다.")
+        self.light_alert.setWindowTitle("Warning")
+        self.light_alert.setInformativeText('빈칸을 확인해주세요')
+        self.light_alert.exec_()
+
     def add_account_success(self):
         self.AccountForm.close()
         self.main_page.ID =self.add_account.ID
         self.main_page.add_update.emit()
 
+    def add_light_success(self):
+        self.LightForm.close()
+        self.main_page.lightID = self.add_light.ID
+        print(self.add_light.ID)
+        print(self.main_page.lightID)
+        self.main_page.add_update_light.emit()
+
     def close_add_account_page(self):
         self.AccountForm.close()
 
-    def show_auth_warning(self):
+    def close_add_light_page(self):
+        self.LightForm.close()
+
+    def show_auth_warning_account(self):
         self.auth_alert = QMessageBox()
         self.auth_alert.setIcon(QMessageBox.Warning)
-        self.auth_alert.setText("계정 추가에 실패하였습니다.")
+        self.auth_alert.setText("계정 관리에 실패하였습니다.")
         self.auth_alert.setWindowTitle("Warning")
         self.auth_alert.setInformativeText('계정 추가 및 제거는 관리자만 가능합니다.')
+        self.auth_alert.exec_()
+
+    def show_auth_warning_light(self):
+        self.auth_alert = QMessageBox()
+        self.auth_alert.setIcon(QMessageBox.Warning)
+        self.auth_alert.setText("조명 관리에 실패하였습니다.")
+        self.auth_alert.setWindowTitle("Warning")
+        self.auth_alert.setInformativeText('조명 추가 및 제거는 관리자만 가능합니다.')
         self.auth_alert.exec_()
 
     def show_auth_check(self):
@@ -116,7 +160,7 @@ class UIHandler:
         self.auth_check.setInformativeText('권한을 확인해주세요')
         self.auth_check.exec_()
 
-    def show_delete_warning(self):
+    def show_account_delete_warning(self):
         self.delete_alert = QMessageBox()
         self.delete_alert.setIcon(QMessageBox.Warning)
         self.delete_alert.setText("계정 삭제에 실패하였습니다.")
@@ -128,6 +172,14 @@ class UIHandler:
         self.duplicate_warning = QMessageBox()
         self.duplicate_warning.setIcon(QMessageBox.Warning)
         self.duplicate_warning.setText("계정 추가에 실패하였습니다.")
+        self.duplicate_warning.setWindowTitle("Warning")
+        self.duplicate_warning.setInformativeText('이미 존재하는 ID입니다.')
+        self.duplicate_warning.exec_()
+
+    def light_duplicate_warning(self):
+        self.duplicate_warning = QMessageBox()
+        self.duplicate_warning.setIcon(QMessageBox.Warning)
+        self.duplicate_warning.setText("조명 추가에 실패하였습니다.")
         self.duplicate_warning.setWindowTitle("Warning")
         self.duplicate_warning.setInformativeText('이미 존재하는 ID입니다.')
         self.duplicate_warning.exec_()
