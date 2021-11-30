@@ -429,10 +429,10 @@ class Main_Page(QWidget):
 
         # page #0 update time label
         self.update_time_label = QtWidgets.QLabel(self.page_0)
-        self.update_time_label.setGeometry(QtCore.QRect(220, 110, 351, 31))
+        self.update_time_label.setGeometry(QtCore.QRect(150, 410, 351, 31))
         font = QtGui.QFont()
         font.setFamily("맑은 고딕")
-        font.setPointSize(14)
+        font.setPointSize(12)
         font.setBold(False)
         font.setWeight(50)
         self.update_time_label.setFont(font)
@@ -450,6 +450,25 @@ class Main_Page(QWidget):
         self.update_separator.setGeometry(QtCore.QRect(170, 112, 2, 31))
         self.update_separator.setStyleSheet("background-color: rgb(188, 188, 188);")
         self.update_separator.setObjectName("update_separator")
+
+        # page #0 center circle
+        self.center_circle = QtWidgets.QLabel(self.page_0)
+        self.center_circle.setGeometry(QtCore.QRect(120, 200, 361, 361))
+        self.center_circle.setText("")
+        self.center_circle.setPixmap(QtGui.QPixmap("UI/imgsource/circle-blue.png"))
+        self.center_circle.setScaledContents(True)
+        self.center_circle.setObjectName("center_circle")
+
+        # page #0 result label
+        self.system_result_label = QtWidgets.QLabel(self.page_0)
+        self.system_result_label.setGeometry(QtCore.QRect(250, 270, 131, 71))
+        font = QtGui.QFont()
+        font.setFamily("맑은 고딕")
+        font.setPointSize(26)
+        self.system_result_label.setText("정상")
+        self.system_result_label.setFont(font)
+        self.system_result_label.setStyleSheet("color: rgb(82, 140, 220);")
+        self.system_result_label.setObjectName("system_result_label")
 
         #
         self.stackedWidget.addWidget(self.page_0)
@@ -1155,18 +1174,30 @@ class Main_Page(QWidget):
         self.cursor.execute("select count(*) from light_status where light_stat = 'old';")
         self.result = self.cursor.fetchall()
         self.anomaly_detection_old_result.setText(str(self.result[0][0]))
+        value = self.result[0][0]
 
         self.cursor.execute("select count(*) from light_status where light_stat = 'change';")
         self.result = self.cursor.fetchall()
         self.anomaly_detection_change_result.setText(str(self.result[0][0]))
-        self.current_time = datetime.datetime.now()
+
+        if(self.result[0][0] > 0):
+            self.system_result_label.setText("경고")
+            self.system_result_label.setStyleSheet("color: rgb(244, 107, 85);")
+            self.center_circle.setPixmap(QtGui.QPixmap("UI/imgsource/circle-red.png"))
+        elif(value > 0):
+            self.system_result_label.setText("위험")
+            self.system_result_label.setStyleSheet("color: rgb(246, 135, 111);")
+            self.center_circle.setPixmap(QtGui.QPixmap("UI/imgsource/circle-yellow.png"))
+        else:
+            self.system_result_label.setText("정상")
+            self.system_result_label.setStyleSheet("color: rgb(82, 140, 220);")
+            self.center_circle.setPixmap(QtGui.QPixmap("UI/imgsource/circle-blue.png"))
+
 
     def update_date_update(self):
-        self.update_time_label.setText("업데이트 : " +
-                                       str(self.current_time.year) + "-" + str(self.current_time.month) + "-" + str(
-            self.current_time.day) + "  " + str(
-            self.current_time.hour) +
-                                       ":" + str(self.current_time.minute) + ":" + str(self.current_time.second))
+        self.current_time = datetime.datetime.now()
+        self.update_time_label.setText("업데이트 : " + str(self.current_time.year) + "-" + str(self.current_time.month) + "-" +
+                        str(self.current_time.day) + "  " + str(self.current_time.hour) +":" + str(self.current_time.minute) + ":" + str(self.current_time.second))
         self.overview_update()
 
 
