@@ -1119,7 +1119,6 @@ class Main_Page(QWidget):
             self.output = "select @output"
             self.cursor.execute(self.output)
             result = self.cursor.fetchone()
-            print(result)
             if (result[0] == 0):
                 self.light_status_result.setText("꺼짐")
             elif (result[0] == 2):
