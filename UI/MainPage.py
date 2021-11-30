@@ -175,7 +175,7 @@ class Main_Page(QWidget):
                                       "border-image:url(UI/imgsource/sync2.png);\n"
                                       "}")
         self.refresh_button.setObjectName("refresh_button")
-        self.refresh_button.clicked.connect(self.update_date_update)
+        self.refresh_button.clicked.connect(self.overview_update)
 
         # page #0 white background
         self.page0_white_background_2 = QtWidgets.QLabel(self.page_0)
@@ -555,24 +555,6 @@ class Main_Page(QWidget):
                                                  "}")
         self.delete_light_button.setObjectName("delete_light_button")
         self.delete_light_button.clicked.connect(self.delete_light)
-
-        # page #1 change_light_button
-        self.change_light_button = QtWidgets.QPushButton(self.page_1)
-        self.change_light_button.setGeometry(QtCore.QRect(1030, 300, 131, 51))
-        font = QtGui.QFont()
-        font.setFamily("맑은 고딕")
-        font.setBold(True)
-        font.setPointSize(12)
-        self.change_light_button.setFont(font)
-        self.change_light_button.setStyleSheet("QPushButton{\n"
-                                               "background-color: rgb(255, 237, 32);\n"
-                                               "border-radius:12px;\n"
-                                               "}\n"
-                                               "QPushButton:hover{\n"
-                                               "background-color: rgb(153, 153, 153);\n"
-                                               "border-radius:12px;\n"
-                                               "}")
-        self.change_light_button.setObjectName("change_light_button")
 
         # page #1 listwidget _ light
         self.listWidget_light = QtWidgets.QListWidget(self.page_1)
@@ -1046,7 +1028,6 @@ class Main_Page(QWidget):
         self.light_list_label.setText(_translate("MainForm", "조명 목록"))
         self.add_light_button.setText(_translate("MainForm", "조명 추가"))
         self.delete_light_button.setText(_translate("MainForm", "조명 삭제"))
-        self.change_light_button.setText(_translate("MainForm", "정보 변경"))
         __sortingEnabled = self.listWidget_light.isSortingEnabled()
         self.listWidget_light.setSortingEnabled(False)
         self.light_information_label.setText(_translate("MainForm", "조명 정보"))
@@ -1132,14 +1113,20 @@ class Main_Page(QWidget):
             self.cursor.execute(query)
             result = self.cursor.fetchall()
             self.light_lux_result.setText(str(result[0][0]))
-            procedure = "call take_light_status(" + value + ");"
+
+            procedure = "call check_light(" + value + "," + "@output" + ");"
             self.cursor.execute(procedure)
-            result = self.cursor.fetchall()
-            if (result[0][0] == "change"):
+            self.output = "select @output"
+            self.cursor.execute(self.output)
+            result = self.cursor.fetchone()
+            print(result)
+            if (result[0] == 0):
+                self.light_status_result.setText("꺼짐")
+            elif (result[0] == 2):
                 self.light_status_result.setText("교체 필요")
-            elif (result[0][0] == 'old'):
+            elif (result[0] == 3):
                 self.light_status_result.setText("노후화됨")
-            else:
+            elif (result[0] == 4):
                 self.light_status_result.setText("정상")
 
     def light_control_update(self):
@@ -1159,6 +1146,13 @@ class Main_Page(QWidget):
                     self.listWidget_light_control.item(i).setIcon(QIcon("UI/imgsource/bulb-normal-off.png"))
 
     def overview_update(self):
+
+        self.current_time = datetime.datetime.now()
+        self.update_time_label.setText(
+            "업데이트 : " + str(self.current_time.year) + "-" + str(self.current_time.month) + "-" +
+            str(self.current_time.day) + "  " + str(self.current_time.hour) + ":" + str(
+                self.current_time.minute) + ":" + str(self.current_time.second))
+
         self.cursor.execute("select count(*) from light_setting where light_onoff = 'on';")
         self.result = self.cursor.fetchall()
         self.light_status_on_result.setText(str(self.result[0][0]))
@@ -1194,11 +1188,6 @@ class Main_Page(QWidget):
             self.center_circle.setPixmap(QtGui.QPixmap("UI/imgsource/circle-blue.png"))
 
 
-    def update_date_update(self):
-        self.current_time = datetime.datetime.now()
-        self.update_time_label.setText("업데이트 : " + str(self.current_time.year) + "-" + str(self.current_time.month) + "-" +
-                        str(self.current_time.day) + "  " + str(self.current_time.hour) +":" + str(self.current_time.minute) + ":" + str(self.current_time.second))
-        self.overview_update()
 
 
     def light_control(self):
@@ -1284,6 +1273,10 @@ class Main_Page(QWidget):
                 query = "update id_table set user_auth = 1 where user_id = '" + value + "';"
                 self.cursor.execute(query)
                 self.auth_result.setText("관리자")
+            elif(self.AUTH == 1) and (AUTHvalue == 1):
+                query = "update id_table set user_auth = 0 where user_id = '" + value + "';"
+                self.cursor.execute(query)
+                self.auth_result.setText("유저")
             else:
                 self.show_auth_check.emit()
 
