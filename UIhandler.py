@@ -118,6 +118,7 @@ class UIHandler:
         self.light_alert.setInformativeText('빈칸을 확인해주세요')
         self.light_alert.exec_()
 
+
     def add_account_success(self):
         self.AccountForm.close()
         self.main_page.ID =self.add_account.ID

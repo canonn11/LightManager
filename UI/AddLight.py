@@ -74,7 +74,7 @@ class Add_Light(QWidget):
         font.setFamily("맑은 고딕")
         font.setBold(True)
         font.setPointSize(12)
-        self.cancel.setFont(font)
+        self.cancel_button.setFont(font)
         self.cancel_button.setStyleSheet("QPushButton{\n"
                                          "background-color: rgb(153, 153, 153);\n"
                                          "border-radius:12px;\n"

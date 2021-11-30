@@ -2,6 +2,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PySide2.QtCore import QTimer
+import datetime
 
 class Main_Page(QWidget):
     show_logout_warning = QtCore.pyqtSignal()
@@ -17,6 +18,8 @@ class Main_Page(QWidget):
     light_number = 0
 
     def setupUi(self, MainForm):
+        self.systemtimer = QTimer()
+        self.systemtimer.start(1000)
         self.cursor.execute("select count(*) from id_table;")
         self.result = self.cursor.fetchone()
         self.account_number = self.result[0]
@@ -161,9 +164,9 @@ class Main_Page(QWidget):
         self.system_overview_label.setObjectName("system_overview_label")
 
         # page #0 refresh button
-        self.page0_refresh_button = QtWidgets.QPushButton(self.page_0)
-        self.page0_refresh_button.setGeometry(QtCore.QRect(1160, 10, 41, 41))
-        self.page0_refresh_button.setStyleSheet("QPushButton{\n"
+        self.refresh_button = QtWidgets.QPushButton(self.page_0)
+        self.refresh_button.setGeometry(QtCore.QRect(1160, 10, 41, 41))
+        self.refresh_button.setStyleSheet("QPushButton{\n"
                                       "background-color: rgba(255, 255, 255, 0);\n"
                                       "border-image:url(UI/imgsource/sync1.png);\n"
                                       "}\n"
@@ -171,7 +174,8 @@ class Main_Page(QWidget):
                                       "background-color: rgba(255, 255, 255, 0);\n"
                                       "border-image:url(UI/imgsource/sync2.png);\n"
                                       "}")
-        self.page0_refresh_button.setObjectName("page0_refresh_button")
+        self.refresh_button.setObjectName("refresh_button")
+        self.refresh_button.clicked.connect(self.update_date_update)
 
         # page #0 white background
         self.page0_white_background_2 = QtWidgets.QLabel(self.page_0)
@@ -206,7 +210,6 @@ class Main_Page(QWidget):
         font.setBold(False)
         font.setWeight(50)
         self.light_status_text.setFont(font)
-        self.light_status_text.setStyleSheet("font-color:rgb(157, 157, 157);")
         self.light_status_text.setObjectName("light_status_text")
 
         # page #0 light on image
@@ -225,7 +228,7 @@ class Main_Page(QWidget):
 
         # page #0 light on text label
         self.light_status_on = QtWidgets.QLabel(self.page_0)
-        self.light_status_on.setGeometry(QtCore.QRect(730, 290, 71, 41))
+        self.light_status_on.setGeometry(QtCore.QRect(740, 290, 71, 41))
         font = QtGui.QFont()
         font.setFamily("맑은 고딕")
         font.setPointSize(12)
@@ -236,7 +239,7 @@ class Main_Page(QWidget):
 
         # page #0 light off text label
         self.light_status_off = QtWidgets.QLabel(self.page_0)
-        self.light_status_off.setGeometry(QtCore.QRect(970, 290, 71, 41))
+        self.light_status_off.setGeometry(QtCore.QRect(980, 290, 71, 41))
         font = QtGui.QFont()
         font.setFamily("맑은 고딕")
         font.setPointSize(12)
@@ -254,7 +257,7 @@ class Main_Page(QWidget):
 
         # page #0 light on result label
         self.light_status_on_result = QtWidgets.QLabel(self.page_0)
-        self.light_status_on_result.setGeometry(QtCore.QRect(800, 290, 71, 41))
+        self.light_status_on_result.setGeometry(QtCore.QRect(810, 290, 71, 41))
         font = QtGui.QFont()
         font.setFamily("맑은 고딕")
         font.setPointSize(12)
@@ -269,7 +272,7 @@ class Main_Page(QWidget):
 
         # page #0 light off result label
         self.light_status_off_result = QtWidgets.QLabel(self.page_0)
-        self.light_status_off_result.setGeometry(QtCore.QRect(1040, 290, 71, 41))
+        self.light_status_off_result.setGeometry(QtCore.QRect(1050, 290, 71, 41))
         font = QtGui.QFont()
         font.setFamily("맑은 고딕")
         font.setPointSize(12)
@@ -291,7 +294,6 @@ class Main_Page(QWidget):
         font.setBold(False)
         font.setWeight(50)
         self.anomaly_detection_text.setFont(font)
-        self.anomaly_detection_text.setStyleSheet("font-color:rgb(157, 157, 157);")
         self.anomaly_detection_text.setObjectName("anomaly_detection_text")
 
         # page #0 anomaly detection normal image label
@@ -413,6 +415,42 @@ class Main_Page(QWidget):
         self.result = self.cursor.fetchall()
         self.anomaly_detection_change_result.setText(str(self.result[0][0]))
 
+        # page #0 result text label
+        self.result_text_label = QtWidgets.QLabel(self.page_0)
+        self.result_text_label.setGeometry(QtCore.QRect(50, 110, 121, 31))
+        font = QtGui.QFont()
+        font.setFamily("맑은 고딕")
+        font.setPointSize(14)
+        font.setBold(False)
+        font.setWeight(50)
+        self.result_text_label.setFont(font)
+        self.result_text_label.setStyleSheet("font-color:rgb(157, 157, 157);")
+        self.result_text_label.setObjectName("result_text_label")
+
+        # page #0 update time label
+        self.update_time_label = QtWidgets.QLabel(self.page_0)
+        self.update_time_label.setGeometry(QtCore.QRect(220, 110, 351, 31))
+        font = QtGui.QFont()
+        font.setFamily("맑은 고딕")
+        font.setPointSize(14)
+        font.setBold(False)
+        font.setWeight(50)
+        self.update_time_label.setFont(font)
+        self.update_time_label.setStyleSheet("color:rgb(157, 157, 157);")
+        self.update_time_label.setObjectName("update_time_label")
+
+        self.current_time = datetime.datetime.now()
+        self.update_time_label.setText("업데이트 : "+
+            str(self.current_time.year) + "-" + str(self.current_time.month) + "-" + str(self.current_time.day) + "  " + str(
+                self.current_time.hour) +
+            ":" + str(self.current_time.minute) + ":" + str(self.current_time.second))
+
+        # page #0 update time / result separator
+        self.update_separator = QtWidgets.QLabel(self.page_0)
+        self.update_separator.setGeometry(QtCore.QRect(170, 112, 2, 31))
+        self.update_separator.setStyleSheet("background-color: rgb(188, 188, 188);")
+        self.update_separator.setObjectName("update_separator")
+
         #
         self.stackedWidget.addWidget(self.page_0)
 
@@ -528,9 +566,6 @@ class Main_Page(QWidget):
         self.listWidget_light.setStyleSheet("border-radius:1px;")
         self.listWidget_light.setObjectName("listWidget_light")
         self.listWidget_light.itemSelectionChanged.connect(self.on_change_light)
-        self.timer = QTimer()
-        self.timer.start(1000)
-        self.timer.timeout.connect(self.on_change_light)
 
         self.cursor.execute("select * from light_list;")
         self.result = self.cursor.fetchall()
@@ -663,6 +698,79 @@ class Main_Page(QWidget):
         self.light_control_label.setFont(font)
         self.light_control_label.setToolTipDuration(-1)
         self.light_control_label.setObjectName("light_control_label")
+
+        # page #2 white background
+        self.page2_white_background = QtWidgets.QLabel(self.page_2)
+        self.page2_white_background.setGeometry(QtCore.QRect(30, 90, 911, 521))
+        self.page2_white_background.setStyleSheet("background-color: rgb(255, 255, 255);\n"
+                                                  "border-radius:12px;")
+        self.page2_white_background.setText("")
+        self.page2_white_background.setObjectName("page2_white_background")
+
+        # page #2 listwidget_light_control
+        self.listWidget_light_control = QtWidgets.QListWidget(self.page_2)
+        self.listWidget_light_control.setGeometry(QtCore.QRect(40, 100, 891, 501))
+        font = QtGui.QFont()
+        font.setPointSize(28)
+        font.setBold(True)
+        font.setWeight(75)
+        self.listWidget_light_control.setFont(font)
+        self.listWidget_light_control.setStyleSheet("border-radius:1px;")
+        self.listWidget_light_control.setObjectName("listWidget_light_control")
+        self.listWidget_light_control.setViewMode(QtWidgets.QListWidget.IconMode)
+        self.listWidget_light_control.setIconSize(QtCore.QSize(128, 128))
+
+
+
+        self.cursor.execute("select * from light_setting;")
+        self.result = self.cursor.fetchall()
+        for i in range(0, self.light_number):
+            if(self.result[i][2]=='on'):
+                self.icon = QtGui.QIcon("UI/imgsource/bulb-normal.png")
+                self.listWidget_light_control.addItem(QListWidgetItem(self.icon,str(self.result[i][0])))
+            elif(self.result[i][2]=='off'):
+                self.icon = QtGui.QIcon("UI/imgsource/bulb-normal-off.png")
+                self.listWidget_light_control.addItem(QListWidgetItem(self.icon, str(self.result[i][0])))
+
+        # page #2 light_control_button
+        self.light_control_button = QtWidgets.QPushButton(self.page_2)
+        self.light_control_button.setGeometry(QtCore.QRect(1000, 100, 171, 51))
+        font = QtGui.QFont()
+        font.setFamily("맑은 고딕")
+        font.setPointSize(12)
+        font.setBold(True)
+        font.setWeight(75)
+        self.light_control_button.setFont(font)
+        self.light_control_button.setStyleSheet("QPushButton{\n"
+                                              "background-color: rgb(53, 174, 255);\n"
+                                              "border-radius:12px;\n"
+                                              "}\n"
+                                              "QPushButton:hover{\n"
+                                              "background-color: rgb(153, 153, 153);\n"
+                                              "border-radius:12px;\n"
+                                              "}")
+        self.light_control_button.setObjectName("light_control_button")
+        self.light_control_button.clicked.connect(self.light_control)
+
+        # page #2 set_timer_button
+        self.set_timer_button = QtWidgets.QPushButton(self.page_2)
+        self.set_timer_button.setGeometry(QtCore.QRect(1000, 170, 171, 51))
+        font = QtGui.QFont()
+        font.setFamily("맑은 고딕")
+        font.setPointSize(12)
+        font.setBold(True)
+        font.setWeight(75)
+        self.set_timer_button.setFont(font)
+        self.set_timer_button.setStyleSheet("QPushButton{\n"
+                                               "background-color: rgb(255, 237, 32);\n"
+                                               "border-radius:12px;\n"
+                                               "}\n"
+                                               "QPushButton:hover{\n"
+                                               "background-color: rgb(153, 153, 153);\n"
+                                               "border-radius:12px;\n"
+                                               "}")
+        self.set_timer_button.setObjectName("set_timer_button")
+        self.set_timer_button.clicked.connect(self.light_control_timer)
 
         #
         self.stackedWidget.addWidget(self.page_2)
@@ -886,6 +994,12 @@ class Main_Page(QWidget):
 
         #
         self.stackedWidget.addWidget(self.page_3)
+
+        self.systemtimer.timeout.connect(self.on_change_light)
+        self.systemtimer.timeout.connect(self.light_control_update)
+        self.systemtimer.timeout.connect(self.overview_update)
+
+
         self.retranslateUi(MainForm)
         self.stackedWidget.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(MainForm)
@@ -903,8 +1017,12 @@ class Main_Page(QWidget):
         self.anomaly_detection_normal.setText(_translate("MainForm", "정상 : "))
         self.anomaly_detection_old.setText(_translate("MainForm", "노후화 :"))
         self.anomaly_detection_change.setText(_translate("MainForm", "교체 필요 :"))
+        self.result_text_label.setText(_translate("MainForm", "진단 결과"))
         self.light_status_label.setText(_translate("MainForm", "조명 관리"))
         self.light_control_label.setText(_translate("MainForm", "조명 제어"))
+        self.listWidget_light_control.setSortingEnabled(False)
+        self.light_control_button.setText(_translate("MainForm", "조명 켜기/끄기"))
+        self.set_timer_button.setText(_translate("MainForm", "타이머 설정"))
         self.account_label.setText(_translate("MainForm", "계정 관리"))
         self.light_list_label.setText(_translate("MainForm", "조명 목록"))
         self.add_light_button.setText(_translate("MainForm", "조명 추가"))
@@ -968,11 +1086,11 @@ class Main_Page(QWidget):
         self.stackedWidget.setCurrentIndex(1)
 
     def delete_light(self):
-        value = self.listWidget_light.currentItem().text()
         row = self.listWidget_light.currentRow()
         if(row==-1):
             pass
         else:
+            value = self.listWidget_light.currentItem().text()
             if(self.AUTH == 0):
                 self.show_auth_warning_light.emit()
             else:
@@ -1005,6 +1123,90 @@ class Main_Page(QWidget):
             else:
                 self.light_status_result.setText("정상")
 
+    def light_control_update(self):
+        row = self.listWidget_light_control.currentRow()
+        if(row == -1):
+            pass
+        else:
+            count = self.listWidget_light_control.count()
+            for i in range(0,count):
+                value = self.listWidget_light_control.item(i).text()
+                query = "select light_onoff from light_setting where light_setting_id = "+str(value)+";"
+                self.cursor.execute(query)
+                result = self.cursor.fetchall()
+                if(result[0][0]=='on'):
+                    self.listWidget_light_control.item(i).setIcon(QIcon("UI/imgsource/bulb-normal.png"))
+                elif(result[0][0] == 'off'):
+                    self.listWidget_light_control.item(i).setIcon(QIcon("UI/imgsource/bulb-normal-off.png"))
+
+    def overview_update(self):
+        self.cursor.execute("select count(*) from light_setting where light_onoff = 'on';")
+        self.result = self.cursor.fetchall()
+        self.light_status_on_result.setText(str(self.result[0][0]))
+
+        self.cursor.execute("select count(*) from light_setting where light_onoff = 'off';")
+        self.result = self.cursor.fetchall()
+        self.light_status_off_result.setText(str(self.result[0][0]))
+
+        self.cursor.execute("select count(*) from light_status where light_stat = 'normal';")
+        self.result = self.cursor.fetchall()
+        self.anomaly_detection_normal_result.setText(str(self.result[0][0]))
+
+        self.cursor.execute("select count(*) from light_status where light_stat = 'old';")
+        self.result = self.cursor.fetchall()
+        self.anomaly_detection_old_result.setText(str(self.result[0][0]))
+
+        self.cursor.execute("select count(*) from light_status where light_stat = 'change';")
+        self.result = self.cursor.fetchall()
+        self.anomaly_detection_change_result.setText(str(self.result[0][0]))
+        self.current_time = datetime.datetime.now()
+
+    def update_date_update(self):
+        self.update_time_label.setText("업데이트 : " +
+                                       str(self.current_time.year) + "-" + str(self.current_time.month) + "-" + str(
+            self.current_time.day) + "  " + str(
+            self.current_time.hour) +
+                                       ":" + str(self.current_time.minute) + ":" + str(self.current_time.second))
+        self.overview_update()
+
+
+    def light_control(self):
+        row = self.listWidget_light_control.currentRow()
+        if(row==-1):
+            pass
+        else:
+            value = self.listWidget_light_control.currentItem().text()
+            query = "select * from light_setting where light_setting_id = "+str(value)+";"
+            self.cursor.execute(query)
+            result = self.cursor.fetchall()
+            if(result[0][2] == 'on'):
+                query = "update light_setting set light_onoff = 'off' where light_setting_id ="+str(value)+";"
+                self.cursor.execute(query)
+                self.listWidget_light_control.item(row).setIcon(QIcon("UI/imgsource/bulb-normal-off.png"))
+            elif (result[0][2] == 'off'):
+                query = "update light_setting set light_onoff = 'on' where light_setting_id =" + str(value) + ";"
+                self.cursor.execute(query)
+                self.listWidget_light_control.item(row).setIcon(QIcon("UI/imgsource/bulb-normal.png"))
+
+    def light_control_timer(self):
+        row = self.listWidget_light_control.currentRow()
+        if (row == -1):
+            pass
+        else:
+            text, ok = QInputDialog.getInt(self, 'Timer', '시간을 입력하세요 (단위 : 초)   ')
+
+            if ok:
+                time_value = text
+                if(time_value < 0):
+                    pass
+                else:
+                    value = self.listWidget_light_control.currentItem().text()
+                    query = "select * from light_setting where light_setting_id = " + str(value) + ";"
+                    self.cursor.execute(query)
+                    result = self.cursor.fetchall()
+                    query = "update light_setting set light_timer = " + str(time_value) + " where light_setting_id = " + str(
+                        value) + ";"
+                    self.cursor.execute(query)
 
 
 
@@ -1022,30 +1224,35 @@ class Main_Page(QWidget):
             self.auth_result.setText("유저")
 
     def delete_account(self):
-        value = self.listWidget_account.currentItem().text()
         row = self.listWidget_account.currentRow()
         if(row==-1):
             pass
         else:
-            if(self.AUTH == 0):
+            value = self.listWidget_account.currentItem().text()
+            if (self.AUTH == 0):
                 self.show_auth_warning_account.emit()
-            elif(self.loginID == value):
+            elif (self.loginID == value):
                 self.show_account_delete_warning.emit()
             else:
-                query = "delete from id_table where user_id = '"+value+"';"
+                query = "delete from id_table where user_id = '" + value + "';"
                 self.cursor.execute(query)
                 self.listWidget_account.takeItem(row)
 
     def auth_control(self):
-        value = self.listWidget_account.currentItem().text()
-        query = "select * from id_table where user_id ='"+value+"';"
-        self.cursor.execute(query)
-        result = self.cursor.fetchall()
-        AUTHvalue = result[0][4]
-
-        if(self.AUTH ==1) and (AUTHvalue<1):
-            query = "update id_table set user_auth = 1 where user_id = '"+value+"';"
-            self.cursor.execute(query)
-            self.auth_result.setText("관리자")
+        row = self.listWidget_account.currentRow()
+        if(row==-1):
+            pass
         else:
-            self.show_auth_check.emit()
+            value = self.listWidget_account.currentItem().text()
+            query = "select * from id_table where user_id ='" + value + "';"
+            self.cursor.execute(query)
+            result = self.cursor.fetchall()
+            AUTHvalue = result[0][4]
+
+            if (self.AUTH == 1) and (AUTHvalue < 1):
+                query = "update id_table set user_auth = 1 where user_id = '" + value + "';"
+                self.cursor.execute(query)
+                self.auth_result.setText("관리자")
+            else:
+                self.show_auth_check.emit()
+
