@@ -11,12 +11,12 @@ import pymysql
 
 class UIHandler:
     def __init__(self):
-        self.connection = pymysql.connect(
-            host='112.172.221.228',
-            port=3306,
-            user='software',
-            passwd='1234',
-            db='light_control', charset='utf8', autocommit=True)
+        """self.connection = pymysql.connect(
+            host=' ',
+            port= ,
+            user=' ',
+            passwd=' ',
+            db=' ', charset='utf8', autocommit=True)"""
 
         # prepare a cursor object using cursor() method
         self.cursor = self.connection.cursor()
